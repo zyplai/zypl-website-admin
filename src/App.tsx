@@ -14,24 +14,24 @@ function App() {
 
   return (
     // <div className={darkMode ? "app dark" : "app"}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/">
-            <Route index element={<Home />} />
-            <Route path="login" element={<Login />} />
-            <Route path="users">
-              <Route index element={<List />} />
-              {/* <Route
+    <BrowserRouter>
+      <Routes>
+        <Route path="/">
+          <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+          <Route path="home">
+            <Route index element={<List />} />
+            {/* <Route
                 path="new"
                 element={<New inputs={userInputs} title="Add New User" />}
               /> */}
-            </Route>
-            <Route path="products">
-              <Route index element={<List />} />
-            </Route>
           </Route>
-        </Routes>
-      </BrowserRouter>
+          <Route path="products">
+            <Route index element={<List />} />
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
     // </div>
   );
 }

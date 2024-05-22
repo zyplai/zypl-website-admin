@@ -25,7 +25,6 @@ import Pertalife from "../../assets/images/Pertalife.png";
 import Texnomart from "../../assets/images/Texnomart.png";
 import BankOfBaku from "../../assets/images/bank of Baku.png";
 import Blink from "../../assets/images/blink.png";
-import React from "react";
 
 const Home = () => {
   return (
