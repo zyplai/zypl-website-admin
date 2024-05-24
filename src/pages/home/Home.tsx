@@ -25,6 +25,25 @@ import Pertalife from "../../assets/images/Pertalife.png";
 import Texnomart from "../../assets/images/Texnomart.png";
 import BankOfBaku from "../../assets/images/bank of Baku.png";
 import Blink from "../../assets/images/blink.png";
+import BRI from "../../assets/images/bri.png";
+import BRT from "../../assets/images/brt.png";
+import BTN from "../../assets/images/btn.png";
+import CenterCredit from "../../assets/images/centercredit.png";
+import Ceska from "../../assets/images/ceska.png";
+import Commercbank from "../../assets/images/commecbank.png";
+import Euroasia from "../../assets/images/euroasia.png";
+import Fazos from "../../assets/images/fazos.png";
+import FincaGlobal from "../../assets/images/finca-global.png";
+import Finca from "../../assets/images/finca.png";
+import Furuz from "../../assets/images/furuz.png";
+import HomeCredit from "../../assets/images/homecredit.png";
+import Humo from "../../assets/images/humo.png";
+import Ibt from "../../assets/images/ibt.png";
+import Imon from "../../assets/images/imon.png";
+import Jado from "../../assets/images/jado.png";
+import Microfinance from "../../assets/images/microfinance.png";
+import Mycar from "../../assets/images/mycar.png";
+import Oxus from "../../assets/images/oxus.png";
 
 const Home = () => {
   return (
@@ -104,6 +123,9 @@ const Home = () => {
             <img src={FincaKG} alt="" />
           </div>
           <div className="listContainer">
+            <img src={Furuz} alt="" />
+          </div>
+          <div className="listContainer">
             <img src={Hamkor} alt="" />
           </div>
           <div className="listContainer">
@@ -117,6 +139,60 @@ const Home = () => {
           </div>
           <div className="listContainer">
             <img src={Blink} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={BRI} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={BRT} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={BTN} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={CenterCredit} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Ceska} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Commercbank} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Euroasia} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Fazos} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={FincaGlobal} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Finca} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={HomeCredit} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Humo} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Ibt} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Imon} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Jado} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Microfinance} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Mycar} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Oxus} alt="" />
           </div>
         </div>
       </div>

@@ -18,11 +18,13 @@
     .listContainer {
       -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
       box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-      padding: 0 20px;
+      // padding: 0 20px;
+      width: 180px;
       height: 60px;
       display: flex;
       text-align: center;
       align-items: center;
+      justify-content: center;
 
       .listTitle {
         font-weight: 500;

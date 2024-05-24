@@ -8,6 +8,7 @@ import "./style/dark.scss";
 import { useContext } from "react";
 // import { DarkModeContext } from "./context/darkModeContext";
 import React from "react";
+import Ecosystem from "pages/ecosystem";
 
 function App() {
   // const { darkMode } = useContext(DarkModeContext);
@@ -18,17 +19,9 @@ function App() {
       <Routes>
         <Route path="/">
           <Route index element={<Home />} />
-          <Route path="login" element={<Login />} />
-          <Route path="home">
-            <Route index element={<List />} />
-            {/* <Route
-                path="new"
-                element={<New inputs={userInputs} title="Add New User" />}
-              /> */}
-          </Route>
-          <Route path="products">
-            <Route index element={<List />} />
-          </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<List />} />
+          <Route path="/ecosystem" element={<Ecosystem />} />
         </Route>
       </Routes>
     </BrowserRouter>
