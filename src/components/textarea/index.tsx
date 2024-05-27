@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import InfoIcon from "@mui/icons-material/Info";
 import ModalCenter from "components/modal-center";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 import "./textarea.scss";
 
 interface ITextareaProps {
@@ -34,7 +36,12 @@ const Textarea = ({ title, imgSrc, value, onChange }: ITextareaProps) => {
         />
         <ModalCenter in={modalImg} onClose={() => setModalImg(false)}>
           <div style={{ width: "900px", height: "600px" }}>
-            <img src={imgSrc} onClick={() => setModalImg(false)} style={{width:"100%", objectFit:"cover"}}/>
+            <LazyLoadImage
+              src={imgSrc}
+              onClick={() => setModalImg(false)}
+              style={{ width: "100%", objectFit: "cover" }}
+              effect="blur"
+            />
           </div>
         </ModalCenter>
       </div>
