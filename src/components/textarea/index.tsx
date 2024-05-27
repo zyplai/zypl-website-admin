@@ -33,7 +33,9 @@ const Textarea = ({ title, imgSrc, value, onChange }: ITextareaProps) => {
           onClick={() => setModalImg(true)}
         />
         <ModalCenter in={modalImg} onClose={() => setModalImg(false)}>
-          <img src={imgSrc} onClick={() => setModalImg(false)} />
+          <div style={{ width: "900px", height: "600px" }}>
+            <img src={imgSrc} onClick={() => setModalImg(false)} style={{width:"100%", objectFit:"cover"}}/>
+          </div>
         </ModalCenter>
       </div>
       <textarea

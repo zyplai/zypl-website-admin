@@ -22,6 +22,15 @@ import Home18 from "../../assets/screenshot/home18.png";
 import Home19 from "../../assets/screenshot/home19.png";
 import Home20 from "../../assets/screenshot/home20.png";
 import Home21 from "../../assets/screenshot/home21.png";
+import Home22 from "../../assets/screenshot/home22.png";
+import Home23 from "../../assets/screenshot/home23.png";
+import Home24 from "../../assets/screenshot/home24.png";
+import Home25 from "../../assets/screenshot/home25.png";
+import Home26 from "../../assets/screenshot/home26.png";
+import Home27 from "../../assets/screenshot/home27.png";
+import Home28 from "../../assets/screenshot/home28.png";
+import Home29 from "../../assets/screenshot/home29.png";
+import Home30 from "../../assets/screenshot/home30.png";
 import { useState } from "react";
 import Textarea from "components/textarea";
 import { Button } from "@mui/material";
@@ -306,7 +315,7 @@ const List = () => {
                 title={
                   "Для получения демо-запроса просто оставьте нам контактный телефон"
                 }
-                imgSrc={Home5}
+                imgSrc={Home22}
                 value={form["ru"].contactNumber}
                 onChange={(contactNumber) =>
                   setForm({
@@ -319,7 +328,7 @@ const List = () => {
                 title={
                   "Мы будем рады услышать вас. Пожалуйста, заполните эту форму"
                 }
-                imgSrc={Home5}
+                imgSrc={Home23}
                 value={form["ru"].contactNumberDesc}
                 onChange={(contactNumberDesc) =>
                   setForm({
@@ -330,7 +339,7 @@ const List = () => {
               />
               <Textarea
                 title={"Имя"}
-                imgSrc={Home5}
+                imgSrc={Home24}
                 value={form["ru"].labelFirstInput}
                 onChange={(labelFirstInput) =>
                   setForm({
@@ -341,7 +350,7 @@ const List = () => {
               />
               <Textarea
                 title={"Заполнитель Имя"}
-                imgSrc={Home5}
+                imgSrc={Home25}
                 value={form["ru"].placeholderFirstInput}
                 onChange={(placeholderFirstInput) =>
                   setForm({
@@ -352,7 +361,7 @@ const List = () => {
               />
               <Textarea
                 title={"Телефон"}
-                imgSrc={Home5}
+                imgSrc={Home26}
                 value={form["ru"].labelSecondInput}
                 onChange={(labelSecondInput) =>
                   setForm({
@@ -363,7 +372,7 @@ const List = () => {
               />
               <Textarea
                 title={"Заполнитель Телефон"}
-                imgSrc={Home5}
+                imgSrc={Home27}
                 value={form["ru"].placeholderSecondInput}
                 onChange={(placeholderSecondInput) =>
                   setForm({
@@ -374,7 +383,7 @@ const List = () => {
               />
               <Textarea
                 title={"Запрос демо версии"}
-                imgSrc={Home5}
+                imgSrc={Home28}
                 value={form["ru"].requestDemo}
                 onChange={(requestDemo) =>
                   setForm({
@@ -385,7 +394,7 @@ const List = () => {
               />
               <Textarea
                 title={"Последние новости"}
-                imgSrc={Home5}
+                imgSrc={Home29}
                 value={form["ru"].lastestNews}
                 onChange={(lastestNews) =>
                   setForm({
@@ -396,7 +405,7 @@ const List = () => {
               />
               <Textarea
                 title={"Посмотреть все новости"}
-                imgSrc={Home5}
+                imgSrc={Home30}
                 value={form["ru"].buttonAllnews}
                 onChange={(buttonAllnews) =>
                   setForm({
@@ -603,7 +612,7 @@ const List = () => {
               />
               <Textarea
                 title={"For demo request just leave us contact number"}
-                imgSrc={Home5}
+                imgSrc={Home22}
                 value={form["en"].contactNumber}
                 onChange={(contactNumber) =>
                   setForm({
@@ -614,7 +623,7 @@ const List = () => {
               />
               <Textarea
                 title={"We'd love to hear from you. Please fill out this form."}
-                imgSrc={Home5}
+                imgSrc={Home23}
                 value={form["en"].contactNumberDesc}
                 onChange={(contactNumberDesc) =>
                   setForm({
@@ -625,7 +634,7 @@ const List = () => {
               />
               <Textarea
                 title={"Name"}
-                imgSrc={Home5}
+                imgSrc={Home24}
                 value={form["en"].labelFirstInput}
                 onChange={(labelFirstInput) =>
                   setForm({
@@ -636,7 +645,7 @@ const List = () => {
               />
               <Textarea
                 title={"placeholder Name"}
-                imgSrc={Home5}
+                imgSrc={Home25}
                 value={form["en"].placeholderFirstInput}
                 onChange={(placeholderFirstInput) =>
                   setForm({
@@ -647,7 +656,7 @@ const List = () => {
               />
               <Textarea
                 title={"Phone"}
-                imgSrc={Home5}
+                imgSrc={Home26}
                 value={form["en"].labelSecondInput}
                 onChange={(labelSecondInput) =>
                   setForm({
@@ -658,7 +667,7 @@ const List = () => {
               />
               <Textarea
                 title={"placeholder phone"}
-                imgSrc={Home5}
+                imgSrc={Home27}
                 value={form["en"].placeholderSecondInput}
                 onChange={(placeholderSecondInput) =>
                   setForm({
@@ -669,7 +678,7 @@ const List = () => {
               />
               <Textarea
                 title={"Request demo"}
-                imgSrc={Home5}
+                imgSrc={Home28}
                 value={form["en"].requestDemo}
                 onChange={(requestDemo) =>
                   setForm({
@@ -680,7 +689,7 @@ const List = () => {
               />
               <Textarea
                 title={"Lastest news"}
-                imgSrc={Home5}
+                imgSrc={Home29}
                 value={form["en"].lastestNews}
                 onChange={(lastestNews) =>
                   setForm({
@@ -691,7 +700,7 @@ const List = () => {
               />
               <Textarea
                 title={"View all news"}
-                imgSrc={Home5}
+                imgSrc={Home30}
                 value={form["en"].buttonAllnews}
                 onChange={(buttonAllnews) =>
                   setForm({

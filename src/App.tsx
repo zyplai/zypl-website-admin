@@ -9,6 +9,10 @@ import { useContext } from "react";
 // import { DarkModeContext } from "./context/darkModeContext";
 import React from "react";
 import Ecosystem from "pages/ecosystem";
+import News from "pages/news";
+import Vacancy from "pages/vacancy";
+import Contact from "pages/contact";
+import About from "pages/about";
 
 function App() {
   // const { darkMode } = useContext(DarkModeContext);
@@ -22,6 +26,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<List />} />
           <Route path="/ecosystem" element={<Ecosystem />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/vacancy" element={<Vacancy />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<About />} />
         </Route>
       </Routes>
     </BrowserRouter>
