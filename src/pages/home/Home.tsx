@@ -44,6 +44,12 @@ import Jado from "../../assets/images/jado.png";
 import Microfinance from "../../assets/images/microfinance.png";
 import Mycar from "../../assets/images/mycar.png";
 import Oxus from "../../assets/images/oxus.png";
+import Planet9 from "../../assets/images/planet9.png";
+import Rata from "../../assets/images/rata.png";
+import Spitamen from "../../assets/images/spitamen.png";
+import Swisscapital from "../../assets/images/swisscapital.png";
+import Tamam from "../../assets/images/tamam_logo.png";
+import Kiva from "../../assets/images/svgexport-2 3.png";
 
 const Home = () => {
   return (
@@ -193,6 +199,24 @@ const Home = () => {
           </div>
           <div className="listContainer">
             <img src={Oxus} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Planet9} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Rata} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Spitamen} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Swisscapital} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Tamam} alt="" />
+          </div>
+          <div className="listContainer">
+            <img src={Kiva} alt="" />
           </div>
         </div>
       </div>

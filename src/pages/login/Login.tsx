@@ -4,6 +4,7 @@ import Input from "components/input";
 import classNames from "classnames";
 import styles from "./login.module.scss";
 import authApiService from "service/auth";
+import { Button } from "@mui/material";
 
 const Login = () => {
   const [email, setEmail] = React.useState("");
@@ -67,7 +68,7 @@ const Login = () => {
               onInput={(value) => setPassword(value)}
             />
           </div>
-          <button className={styles.submit}>
+          <Button className={styles.submit}>
             {isPendingLogin && (
               <span className={styles.loading}>
                 {/* <ButtonLoader /> */}Loading...
@@ -76,7 +77,7 @@ const Login = () => {
             {!isPendingLogin && (
               <span className={styles.submitText}>Войти</span>
             )}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

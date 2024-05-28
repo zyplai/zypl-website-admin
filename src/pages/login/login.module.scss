@@ -78,7 +78,7 @@
   justify-content: center;
   border-radius: 8px;
   color: #eceff4;
-  background: darken(#5e81ac, 7%);
+  background: darken(#6439ff, 7%);
   .submitText {
     z-index: 10;
     position: relative;
@@ -89,7 +89,7 @@
   }
   &:hover {
     &::after {
-      background: lighten(#5e81ac, 5%);
+      background: lighten(#6439ff, 5%);
     }
   }
   &:active {
@@ -109,7 +109,7 @@
     height: 100%;
     border-radius: 8px;
     transition: 80ms ease-in-out;
-    background: #5e81ac;
+    background: #6439ff;
   }
 }
 
