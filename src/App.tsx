@@ -13,6 +13,7 @@ import News from "pages/news";
 import Vacancy from "pages/vacancy";
 import Contact from "pages/contact";
 import About from "pages/about";
+import Logout from "pages/logout";
 
 function App() {
   // const { darkMode } = useContext(DarkModeContext);
@@ -30,6 +31,7 @@ function App() {
           <Route path="/vacancy" element={<Vacancy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
+          <Route path="/logout" element={<Logout />} />
         </Route>
       </Routes>
     </BrowserRouter>

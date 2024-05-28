@@ -53,7 +53,8 @@ const Login = () => {
   return (
     <div className={classNames(styles.email, isPendingLogin && styles.pending)}>
       <div className={styles.container}>
-        <form className={styles.pan} onSubmit={handleLogin}>
+        <form className={styles.form} onSubmit={handleLogin}>
+          <h2 className={styles.title}>Login</h2>
           <div className={styles.inputs}>
             <Input
               title="Эл.почта"

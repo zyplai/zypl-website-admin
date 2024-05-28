@@ -1,0 +1,54 @@
+.list {
+  display: flex;
+  width: 100%;
+  .listContainer {
+    flex: 6;
+    .content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 230px);
+      .modal {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 300px;
+        padding: 20px;
+        gap: 20px;
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        border-radius: 5px;
+        .icon {
+          font-size: 32px;
+          padding: 5px;
+          border-radius: 5px;
+        }
+        .textLogout {
+          color: #999;
+          text-align: center;
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+        .buttonLogout {
+          width: 100%;
+          font-size: 1rem;
+          background: #6439ff;
+          -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+          box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+          padding: 5px 10px;
+          color: #fff;
+          border-radius: 0.7rem;
+          cursor: pointer;
+          transition: 100ms linear;
+          &:hover {
+            background: lighten(#6439ff, 7%);
+          }
+          &:active {
+            background: lighten(#6439ff, 14%);
+          }
+        }
+      }
+    }
+  }
+}
