@@ -1,6 +1,6 @@
 export interface ILogin {
   login: string;
-  passwordId: string;
+  password: string;
 }
 export interface ILoginResult {
   access: string;

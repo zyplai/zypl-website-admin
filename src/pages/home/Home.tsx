@@ -52,6 +52,7 @@ import Tamam from "../../assets/images/tamam_logo.png";
 import Kiva from "../../assets/images/svgexport-2 3.png";
 
 const Home = () => {
+
   return (
     <div className="home">
       <Sidebar />

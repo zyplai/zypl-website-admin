@@ -5,6 +5,7 @@ import classNames from "classnames";
 import styles from "./login.module.scss";
 import authApiService from "service/auth";
 import { Button } from "@mui/material";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [email, setEmail] = React.useState("");
@@ -13,7 +14,7 @@ const Login = () => {
   const [isPendingLogin, setIsPendingLogin] = React.useState(false);
   const [error, setError] = React.useState("");
   const navigate = useNavigate();
-
+ 
   const correctFields = () => {
     if (email.trim() === "") {
       setError("Пожалуйста, заполните поле имя");
@@ -33,20 +34,19 @@ const Login = () => {
     setIsPendingLogin(true);
     try {
       setIsPendingLogin(true);
-      const res = await authApiService
+      await authApiService
         .login({
           login: email,
-          passwordId: password,
+          password: password,
         })
-        // .then(() => {
-        //   console.log(res);
-        // });
-        console.log(res);
-        
-      navigate("/");
+        .then((res) => {
+          localStorage.setItem("token", JSON.stringify(res.access));
+          toast.success("Success!");
+          navigate("/");
+        });
     } catch (err: any) {
       setIsPendingLogin(false);
-      if (err.response?.status === 401) setError("Пользователь не найден!");
+      if (err.response?.status === 401) toast.error("User not found!");
     }
   };
 
@@ -69,7 +69,7 @@ const Login = () => {
               onInput={(value) => setPassword(value)}
             />
           </div>
-          <Button className={styles.submit}>
+          <Button className={styles.submit} type="submit">
             {isPendingLogin && (
               <span className={styles.loading}>
                 {/* <ButtonLoader /> */}Loading...

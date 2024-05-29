@@ -34,6 +34,12 @@ import Home30 from "../../assets/screenshot/home30.png";
 import { useState } from "react";
 import Textarea from "components/textarea";
 import { Button } from "@mui/material";
+import homeApiService from "service/home";
+import { toast } from "react-toastify";
+import React from "react";
+import axios from "axios";
+import baseApiService from "service/base";
+import { HomeModel, IHomeCreateData } from "types";
 
 const initialFormState = {
   ru: {
@@ -104,10 +110,218 @@ const initialFormState = {
 
 const List = () => {
   const [form, setForm] = useState(initialFormState);
+  const [pending, setPending] = useState(false);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPending(true);
+    try {
+      await homeApiService
+        .create({
+          ru: {
+            main: {
+              description: form.ru.zyplAi,
+              title: form.ru.pioneering,
+            },
+            ecosystemSection: {
+              title: form.ru.ecosystem,
+              description: form.ru.banks,
+              mainSectionTitle: form.ru.zyplScore,
+              mainSectionDescription: form.ru.creditScoringSaaS,
+              circleSectionsText: [
+                form.ru.b2b2c,
+                form.ru.remittanceBased,
+                form.ru.guaranteed,
+              ],
+              buttonText: form.ru.learnMore,
+            },
+            resultsSection: {
+              title: form.ru.ourResults,
+              sections: [
+                {
+                  title: form.ru.result1,
+                  description: form.ru.leadingFinancialInstitutions,
+                },
+                {
+                  title: form.ru.result2,
+                  description: form.ru.historicalLoansAccumulated,
+                },
+                {
+                  title: form.ru.result3,
+                  description: form.ru.portfoliUunderwritten,
+                },
+                {
+                  title: form.ru.result4,
+                  description: form.ru.portfolioCommitted,
+                },
+              ],
+            },
+            partnersSection: {
+              title: form.ru.ourPartners,
+              description: form.ru.ourPartnersDesc,
+            },
+            requestDemoSections: {
+              title: form.ru.contactNumber,
+              description: form.ru.contactNumberDesc,
+              labelFirstInput: form.ru.labelFirstInput,
+              labelSecondInput: form.ru.labelSecondInput,
+              placeholderFirstInput: form.ru.placeholderFirstInput,
+              placeholderSecondInput: form.ru.placeholderSecondInput,
+              buttonText: form.ru.requestDemo,
+            },
+            newsSection: {
+              title: form.ru.lastestNews,
+              buttonText: form.ru.buttonAllnews,
+            },
+          },
+          en: {
+            main: {
+              description: form.en.zyplAi,
+              title: form.en.pioneering,
+            },
+            ecosystemSection: {
+              title: form.en.ecosystem,
+              description: form.en.banks,
+              mainSectionTitle: form.en.zyplScore,
+              mainSectionDescription: form.en.creditScoringSaaS,
+              circleSectionsText: [
+                form.en.b2b2c,
+                form.en.remittanceBased,
+                form.en.guaranteed,
+              ],
+              buttonText: form.en.learnMore,
+            },
+            resultsSection: {
+              title: form.en.ourResults,
+              sections: [
+                {
+                  title: form.en.result1,
+                  description: form.en.leadingFinancialInstitutions,
+                },
+                {
+                  title: form.en.result2,
+                  description: form.en.historicalLoansAccumulated,
+                },
+                {
+                  title: form.en.result3,
+                  description: form.en.portfoliUunderwritten,
+                },
+                {
+                  title: form.en.result4,
+                  description: form.en.portfolioCommitted,
+                },
+              ],
+            },
+            partnersSection: {
+              title: form.en.ourPartners,
+              description: form.en.ourPartnersDesc,
+            },
+            requestDemoSections: {
+              title: form.en.contactNumber,
+              description: form.en.contactNumberDesc,
+              labelFirstInput: form.en.labelFirstInput,
+              labelSecondInput: form.en.labelSecondInput,
+              placeholderFirstInput: form.en.placeholderFirstInput,
+              placeholderSecondInput: form.en.placeholderSecondInput,
+              buttonText: form.en.requestDemo,
+            },
+            newsSection: {
+              title: form.en.lastestNews,
+              buttonText: form.en.buttonAllnews,
+            },
+          },
+        })
+        .then((res) => {
+          toast.success(res.message);
+        })
+        .finally(() => setPending(false));
+    } catch (error) {
+      setPending(false);
+      toast.error("error!");
+    }
   };
+
+  React.useEffect(() => {
+    setPending(true);
+    homeApiService.get().then((res) =>
+      setForm({
+        ru: {
+          zyplAi: res.ru.main.title,
+          pioneering: res.ru.main.title,
+          ecosystem: res.ru.ecosystemSection.title,
+          banks: res.ru.ecosystemSection.description,
+          zyplScore: res.ru.ecosystemSection.mainSectionTitle,
+          creditScoringSaaS: res.ru.ecosystemSection.mainSectionDescription,
+          b2b2c: res.ru.ecosystemSection.circleSectionsText[0],
+          remittanceBased: res.ru.ecosystemSection.circleSectionsText[1],
+          guaranteed: res.ru.ecosystemSection.circleSectionsText[2],
+          learnMore: res.ru.ecosystemSection.buttonText,
+          ourResults: res.ru.resultsSection.title,
+          result1: res.ru.resultsSection.sections[0].title,
+          result2: res.ru.resultsSection.sections[1].title,
+          result3: res.ru.resultsSection.sections[2].title,
+          result4: res.ru.resultsSection.sections[3].title,
+          leadingFinancialInstitutions:
+            res.ru.resultsSection.sections[0].description,
+          historicalLoansAccumulated:
+            res.ru.resultsSection.sections[1].description,
+          portfoliUunderwritten: res.ru.resultsSection.sections[2].description,
+          portfolioCommitted: res.ru.resultsSection.sections[3].description,
+          ourPartners: res.ru.partnersSection.title,
+          ourPartnersDesc: res.ru.partnersSection.description,
+          contactNumber: res.ru.requestDemoSections.title,
+          contactNumberDesc: res.ru.requestDemoSections.description,
+          labelFirstInput: res.ru.requestDemoSections.labelFirstInput,
+          labelSecondInput: res.ru.requestDemoSections.labelSecondInput,
+          placeholderFirstInput:
+            res.ru.requestDemoSections.placeholderFirstInput,
+          placeholderSecondInput:
+            res.ru.requestDemoSections.placeholderSecondInput,
+          requestDemo: res.ru.requestDemoSections.buttonText,
+          lastestNews: res.ru.newsSection.title,
+          buttonAllnews: res.ru.newsSection.buttonText,
+        },
+        en: {
+          zyplAi: res.en.main.title,
+          pioneering: res.en.main.title,
+          ecosystem: res.en.ecosystemSection.title,
+          banks: res.en.ecosystemSection.description,
+          zyplScore: res.en.ecosystemSection.mainSectionTitle,
+          creditScoringSaaS: res.en.ecosystemSection.mainSectionDescription,
+          b2b2c: res.en.ecosystemSection.circleSectionsText[0],
+          remittanceBased: res.en.ecosystemSection.circleSectionsText[1],
+          guaranteed: res.en.ecosystemSection.circleSectionsText[2],
+          learnMore: res.en.ecosystemSection.buttonText,
+          ourResults: res.en.resultsSection.title,
+          result1: res.en.resultsSection.sections[0].title,
+          result2: res.en.resultsSection.sections[1].title,
+          result3: res.en.resultsSection.sections[2].title,
+          result4: res.en.resultsSection.sections[3].title,
+          leadingFinancialInstitutions:
+            res.en.resultsSection.sections[0].description,
+          historicalLoansAccumulated:
+            res.en.resultsSection.sections[1].description,
+          portfoliUunderwritten: res.en.resultsSection.sections[2].description,
+          portfolioCommitted: res.en.resultsSection.sections[3].description,
+          ourPartners: res.en.partnersSection.title,
+          ourPartnersDesc: res.en.partnersSection.description,
+          contactNumber: res.en.requestDemoSections.title,
+          contactNumberDesc: res.en.requestDemoSections.description,
+          labelFirstInput: res.en.requestDemoSections.labelFirstInput,
+          labelSecondInput: res.en.requestDemoSections.labelSecondInput,
+          placeholderFirstInput:
+            res.en.requestDemoSections.placeholderFirstInput,
+          placeholderSecondInput:
+            res.en.requestDemoSections.placeholderSecondInput,
+          requestDemo: res.en.requestDemoSections.buttonText,
+          lastestNews: res.en.newsSection.title,
+          buttonAllnews: res.en.newsSection.buttonText,
+        },
+      })
+    );
+  }, []);
+
+  // if (pending) return <></>;
   return (
     <div className="list">
       <Sidebar />
@@ -711,7 +925,9 @@ const List = () => {
               />
             </div>
           </div>
-          <Button className="submitButton">Save</Button>
+          <Button type="submit" className="submitButton">
+            Save
+          </Button>
         </form>
       </div>
     </div>
