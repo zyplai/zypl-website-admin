@@ -16,6 +16,8 @@ import Eco11 from "../../assets/screenshot/eco11.png";
 import Eco12 from "../../assets/screenshot/eco12.png";
 import "./ecosystem.scss";
 import Button from "@mui/material/Button";
+import ecosystemApiService from "service/ecosystem";
+import React from "react";
 
 const initialFormState = {
   ru: {
@@ -49,10 +51,49 @@ const initialFormState = {
 };
 
 const Ecosystem = () => {
+  const [pending, setPending] = useState(false);
   const [form, setForm] = useState(initialFormState);
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
   };
+
+  React.useEffect(() => {
+    setPending(true);
+    ecosystemApiService
+      .get()
+      .then((res) => setForm({
+        ru: {
+          ecosystemTitle: res.ru.main.title,
+          ecosystemDesc: res.ru.main.description,
+          overviewTitle: res.ru.overview.title,
+          overviewDesc: res.ru.overview.description,
+          ecosystem: res.ru.ecosystemSection.title,
+          buildingHolistic: res.ru.ecosystemSection.description,
+          b2b2c: res.ru.ecosystemSection.sections[0].title,
+          b2b2cDesc: res.ru.ecosystemSection.sections[0].description,
+          guaranteed: res.ru.ecosystemSection.sections[1].title,
+          guaranteedDesc: res.ru.ecosystemSection.sections[1].description,
+          remittanceBased: res.ru.ecosystemSection.sections[2].title,
+          remittanceBasedDesc: res.ru.ecosystemSection.sections[3].description,
+        },
+        en: {
+          ecosystemTitle: res.en.main.title,
+          ecosystemDesc: res.en.main.description,
+          overviewTitle: res.en.overview.title,
+          overviewDesc: res.en.overview.description,
+          ecosystem: res.en.ecosystemSection.title,
+          buildingHolistic: res.en.ecosystemSection.description,
+          b2b2c: res.en.ecosystemSection.sections[0].title,
+          b2b2cDesc: res.en.ecosystemSection.sections[0].description,
+          guaranteed: res.en.ecosystemSection.sections[1].title,
+          guaranteedDesc: res.en.ecosystemSection.sections[1].description,
+          remittanceBased: res.en.ecosystemSection.sections[2].title,
+          remittanceBasedDesc: res.en.ecosystemSection.sections[3].description,
+        },
+      }))
+      .finally(() => setPending(false));
+  }, []);
+
   return (
     <div className="list">
       <Sidebar />
