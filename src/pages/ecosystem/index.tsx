@@ -18,6 +18,7 @@ import "./ecosystem.scss";
 import Button from "@mui/material/Button";
 import ecosystemApiService from "service/ecosystem";
 import React from "react";
+import { toast } from "react-toastify";
 
 const initialFormState = {
   ru: {
@@ -58,65 +59,69 @@ const Ecosystem = () => {
     e.preventDefault();
     setUpdatePending(true);
     try {
-      await ecosystemApiService.update({
-        ru: {
-          main: {
-            title: form.ru.ecosystemTitle,
-            description: form.ru.ecosystemDesc,
+      await ecosystemApiService
+        .update({
+          ru: {
+            main: {
+              title: form.ru.ecosystemTitle,
+              description: form.ru.ecosystemDesc,
+            },
+            overview: {
+              title: form.ru.overviewTitle,
+              description: form.ru.overviewDesc,
+            },
+            ecosystemSection: {
+              title: form.ru.ecosystem,
+              description: form.ru.buildingHolistic,
+              sections: [
+                {
+                  title: form.ru.b2b2c,
+                  description: form.ru.b2b2cDesc,
+                },
+                {
+                  title: form.ru.guaranteed,
+                  description: form.ru.guaranteedDesc,
+                },
+                {
+                  title: form.ru.remittanceBased,
+                  description: form.ru.remittanceBasedDesc,
+                },
+              ],
+            },
           },
-          overview: {
-            title: form.ru.overviewTitle,
-            description: form.ru.overviewDesc,
+          en: {
+            main: {
+              title: form.en.ecosystemTitle,
+              description: form.en.ecosystemDesc,
+            },
+            overview: {
+              title: form.en.overviewTitle,
+              description: form.en.overviewDesc,
+            },
+            ecosystemSection: {
+              title: form.en.ecosystem,
+              description: form.en.buildingHolistic,
+              sections: [
+                {
+                  title: form.en.b2b2c,
+                  description: form.en.b2b2cDesc,
+                },
+                {
+                  title: form.en.guaranteed,
+                  description: form.en.guaranteedDesc,
+                },
+                {
+                  title: form.en.remittanceBased,
+                  description: form.en.remittanceBasedDesc,
+                },
+              ],
+            },
           },
-          ecosystemSection: {
-            title: form.ru.ecosystem,
-            description: form.ru.buildingHolistic,
-            sections: [
-              {
-                title: form.ru.b2b2c,
-                description: form.ru.b2b2cDesc,
-              },
-              {
-                title: form.ru.guaranteed,
-                description: form.ru.guaranteedDesc,
-              },
-              {
-                title: form.ru.remittanceBased,
-                description: form.ru.remittanceBasedDesc,
-              },
-            ],
-          },
-        },
-        en: {
-          main: {
-            title: form.en.ecosystemTitle,
-            description: form.en.ecosystemDesc,
-          },
-          overview: {
-            title: form.en.overviewTitle,
-            description: form.en.overviewDesc,
-          },
-          ecosystemSection: {
-            title: form.en.ecosystem,
-            description: form.en.buildingHolistic,
-            sections: [
-              {
-                title: form.en.b2b2c,
-                description: form.en.b2b2cDesc,
-              },
-              {
-                title: form.en.guaranteed,
-                description: form.en.guaranteedDesc,
-              },
-              {
-                title: form.en.remittanceBased,
-                description: form.en.remittanceBasedDesc,
-              },
-            ],
-          },
-        },
-      });
-    } catch (error) {}
+        })
+        .finally(() => setPending(false));
+    } catch (error) {
+      toast.error("error!");
+    }
   };
 
   React.useEffect(() => {

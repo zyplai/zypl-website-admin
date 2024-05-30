@@ -1,13 +1,13 @@
 import baseApiService from "service/base";
-import { Ecosystem, IMessage } from "types";
-import { IContactCreateData } from "types/contact";
+import { IMessage } from "types";
+import { Contact, IContactCreateData } from "types/contact";
 
-const ecosystemApiService = {
+const contactApiService = {
   update(data: IContactCreateData): Promise<IMessage> {
     return baseApiService.PATCH("contact/update", data);
   },
-  get(): Promise<Ecosystem> {
+  get(): Promise<Contact> {
     return baseApiService.GET("contact/get");
   },
 };
-export default ecosystemApiService;
+export default contactApiService;
