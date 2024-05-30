@@ -55,6 +55,7 @@ const Ecosystem = () => {
   const [pending, setPending] = useState(false);
   const [updatePending, setUpdatePending] = useState(false);
   const [form, setForm] = useState(initialFormState);
+  const [dataChanged, setDataChanged] = useState(false);
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUpdatePending(true);
@@ -117,6 +118,9 @@ const Ecosystem = () => {
               ],
             },
           },
+        }).then((res) => {
+          toast.success(res.message);
+          setDataChanged(!dataChanged);
         })
         .finally(() => setPending(false));
     } catch (error) {
@@ -163,7 +167,7 @@ const Ecosystem = () => {
         })
       )
       .finally(() => setPending(false));
-  }, []);
+  }, [dataChanged]);
 
   return (
     <div className="list">

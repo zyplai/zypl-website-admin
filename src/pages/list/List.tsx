@@ -111,6 +111,7 @@ const initialFormState = {
 const List = () => {
   const [form, setForm] = useState(initialFormState);
   const [pending, setPending] = useState(false);
+  const [dataChanged, setDataChanged] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -233,6 +234,7 @@ const List = () => {
         })
         .then((res) => {
           toast.success(res.message);
+          setDataChanged(!dataChanged);
         })
         .finally(() => setPending(false));
     } catch (error) {
@@ -324,7 +326,7 @@ const List = () => {
         })
       )
       .finally(() => setPending(false));
-  }, []);
+  }, [dataChanged]);
 
   return (
     <div className="list">

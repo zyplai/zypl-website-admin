@@ -35,38 +35,45 @@ const initialFormState = {
 const Contact = () => {
   const [form, setForm] = useState(initialFormState);
   const [pending, setPending] = useState(false);
+  const [dataChanged, setDataChanged] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await contactApiService.update({
-        ru: {
-          main: {
-            title: form.ru.contactTitle,
-            description: form.ru.contactDesc,
-          },
-          addressSection: [
-            {
-              nameCity: form.ru.nameCity,
-              address: form.ru.address,
+      await contactApiService
+        .update({
+          ru: {
+            main: {
+              title: form.ru.contactTitle,
+              description: form.ru.contactDesc,
             },
-            { nameCity: form.ru.nameCity2, address: form.ru.address2 },
-          ],
-        },
-        en: {
-          main: {
-            title: form.en.contactTitle,
-            description: form.en.contactDesc,
+            addressSection: [
+              {
+                nameCity: form.ru.nameCity,
+                address: form.ru.address,
+              },
+              { nameCity: form.ru.nameCity2, address: form.ru.address2 },
+            ],
           },
-          addressSection: [
-            {
-              nameCity: form.en.nameCity,
-              address: form.en.address,
+          en: {
+            main: {
+              title: form.en.contactTitle,
+              description: form.en.contactDesc,
             },
-            { nameCity: form.en.nameCity2, address: form.en.address },
-          ],
-        },
-      });
+            addressSection: [
+              {
+                nameCity: form.en.nameCity,
+                address: form.en.address,
+              },
+              { nameCity: form.en.nameCity2, address: form.en.address },
+            ],
+          },
+        })
+        .then((res) => {
+          toast.success(res.message);
+          setDataChanged(!dataChanged);
+        })
+        .finally(() => setPending(false));
     } catch (error) {
       toast.error("Error!");
     }
@@ -97,7 +104,7 @@ const Contact = () => {
         })
       )
       .finally(() => setPending(false));
-  }, []);
+  }, [dataChanged]);
 
   return (
     <div className="list">
