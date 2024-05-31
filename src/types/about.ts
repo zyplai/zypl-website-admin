@@ -23,5 +23,20 @@ export interface IAboutCreateData {
   en: TAboutData;
   ru: TAboutData;
 }
+export interface IPartnerCreate {
+  name: string;
+  file: File | null;
+}
+export interface ITeam {
+  fullName: string;
+  position: string;
+}
+
+export interface ITeamCreateData {
+  ru: ITeam;
+  en: ITeam;
+  director?: boolean;
+  partnerIds: string[];
+}
 
 export type TItemTypeAbout = "main" | "team" | "director" | "ourStory";

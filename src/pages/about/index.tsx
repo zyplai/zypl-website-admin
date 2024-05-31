@@ -7,6 +7,11 @@ import Textarea from "components/textarea";
 import Button from "@mui/material/Button";
 import aboutApiService from "service/about";
 import { toast } from "react-toastify";
+import InfoIcon from "@mui/icons-material/Info";
+import partnerApiService from "service/partner";
+import ModalCenter from "components/modal-center";
+import teamApiService from "service/team";
+import Input from "components/input";
 
 const initialFormState = {
   ru: {
@@ -24,48 +29,28 @@ const initialFormState = {
     ourStory: "",
   },
 };
+const initialFormStateTeam = {
+  ru: {
+    fullName: "",
+    position: "",
+  },
+  en: {
+    fullName: "",
+    position: "",
+  },
+  director: "",
+  partnerIds: "",
+};
 
 const About = () => {
   const [form, setForm] = useState(initialFormState);
+  const [teamForm, setTeamForm] = useState(initialFormStateTeam);
+  const [partnerId, setPartnerId] = useState<string[]>([]);
+  const [file, setFile] = useState<File | null>(null);
+  const [partnerName, setPartnerName] = useState<string>("");
   const [pending, setPending] = useState(false);
   const [dataChanged, setDataChanged] = useState(false);
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await aboutApiService.update({
-        ru: {
-          main: { title: form.ru.aboutTitle, description: form.ru.aboutDesc },
-          team: {
-            title: form.ru.team,
-          },
-          director: {
-            title: form.ru.director,
-          },
-          ourStory: {
-            title: form.ru.ourStory,
-          },
-        },
-        en: {
-          main: { title: form.en.aboutTitle, description: form.en.aboutDesc },
-          team: {
-            title: form.en.team,
-          },
-          director: {
-            title: form.en.director,
-          },
-          ourStory: {
-            title: form.en.ourStory,
-          },
-        },
-      }).then((res) => {
-        toast.success(res.message);
-        setDataChanged(!dataChanged);
-      }).finally(() => setPending(false))
-    } catch (error) {
-      toast.error("error!");
-    }
-  };
+  const [modalImg, setModalImg] = useState(false);
 
   React.useEffect(() => {
     setPending(true);
@@ -92,104 +77,340 @@ const About = () => {
       .finally(() => setPending(false));
   }, [dataChanged]);
 
+  React.useEffect(() => {
+    setPending(true);
+    partnerApiService
+      .get()
+      .then((res) => {
+        const ids = res.map((e) => e.id);
+        setPartnerId(ids);
+      })
+      .finally(() => setPending(false));
+  }, [dataChanged]);
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await aboutApiService
+        .update({
+          ru: {
+            main: { title: form.ru.aboutTitle, description: form.ru.aboutDesc },
+            team: {
+              title: form.ru.team,
+            },
+            director: {
+              title: form.ru.director,
+            },
+            ourStory: {
+              title: form.ru.ourStory,
+            },
+          },
+          en: {
+            main: { title: form.en.aboutTitle, description: form.en.aboutDesc },
+            team: {
+              title: form.en.team,
+            },
+            director: {
+              title: form.en.director,
+            },
+            ourStory: {
+              title: form.en.ourStory,
+            },
+          },
+        })
+        .then((res) => {
+          toast.success(res.message);
+          setDataChanged(!dataChanged);
+        })
+        .finally(() => setPending(false));
+    } catch (error) {
+      toast.error("error!");
+    }
+  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    } else {
+      setFile(null);
+    }
+  };
+
+  const handleSavePartner = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!file) {
+      alert("Please select an image to upload");
+      return;
+    }
+
+    const data = {
+      name: partnerName,
+      file: file,
+    };
+    try {
+      await partnerApiService
+        .create(data)
+        .then((res) => toast.success(res.message));
+      return;
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleCreateTeam = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await teamApiService.create({
+      ru: {
+        fullName: teamForm.ru.fullName,
+        position: teamForm.ru.position,
+      },
+      en: {
+        fullName: teamForm.en.fullName,
+        position: teamForm.en.position,
+      },
+      director: teamForm.director === "false",
+      partnerIds: partnerId,
+    });
+  };
+
   return (
     <div className="list">
       <Sidebar />
       <div className="listContainer">
         <Navbar />
-        <form className="home" onSubmit={onSubmit}>
-          <div className="content">
-            <div className="ru">
-              <h2>RU</h2>
-              <Textarea
-                title="Больше, чем стартап"
-                imgSrc={Eco1}
-                value={form["ru"].aboutTitle}
-                onChange={(aboutTitle) =>
-                  setForm({ ...form, ru: { ...form["ru"], aboutTitle } })
-                }
-              />
-              <Textarea
-                title="Стэнфордские корни и глобальное видение"
-                imgSrc={Eco1}
-                value={form["ru"].aboutDesc}
-                onChange={(aboutDesc) =>
-                  setForm({ ...form, ru: { ...form["ru"], aboutDesc } })
-                }
-              />
-              <Textarea
-                title="Команда менеджеров"
-                imgSrc={Eco1}
-                value={form["ru"].team}
-                onChange={(team) =>
-                  setForm({ ...form, ru: { ...form["ru"], team } })
-                }
-              />
-              <Textarea
-                title="Совет директоров"
-                imgSrc={Eco1}
-                value={form["ru"].director}
-                onChange={(director) =>
-                  setForm({ ...form, ru: { ...form["ru"], director } })
-                }
-              />
-              <Textarea
-                title="Наша история"
-                imgSrc={Eco1}
-                value={form["ru"].ourStory}
-                onChange={(ourStory) =>
-                  setForm({ ...form, ru: { ...form["ru"], ourStory } })
-                }
-              />
-            </div>
-            <div className="en">
-              <h2>EN</h2>
-              <Textarea
-                title="More than a startup"
-                imgSrc={Eco1}
-                value={form["en"].aboutTitle}
-                onChange={(aboutTitle) =>
-                  setForm({ ...form, en: { ...form["en"], aboutTitle } })
-                }
-              />
-              <Textarea
-                title="With Stanford roots and global vision"
-                imgSrc={Eco1}
-                value={form["en"].aboutDesc}
-                onChange={(aboutDesc) =>
-                  setForm({ ...form, en: { ...form["en"], aboutDesc } })
-                }
-              />
-              <Textarea
-                title="Management team"
-                imgSrc={Eco1}
-                value={form["en"].team}
-                onChange={(team) =>
-                  setForm({ ...form, en: { ...form["en"], team } })
-                }
-              />
-              <Textarea
-                title="Board of Directors"
-                imgSrc={Eco1}
-                value={form["en"].director}
-                onChange={(director) =>
-                  setForm({ ...form, en: { ...form["en"], director } })
-                }
-              />
-              <Textarea
-                title="Our story"
-                imgSrc={Eco1}
-                value={form["en"].ourStory}
-                onChange={(ourStory) =>
-                  setForm({ ...form, en: { ...form["en"], ourStory } })
-                }
-              />
-            </div>
-          </div>
-          <Button type="submit" className="submitButton">
-            Save
-          </Button>
-        </form>
+        {pending ? (
+          "Loading..."
+        ) : (
+          <>
+            <form className="home" onSubmit={onSubmit}>
+              <div className="content">
+                <div className="ru">
+                  <h2>RU</h2>
+                  <Textarea
+                    title="Больше, чем стартап"
+                    imgSrc={Eco1}
+                    value={form["ru"].aboutTitle}
+                    onChange={(aboutTitle) =>
+                      setForm({ ...form, ru: { ...form["ru"], aboutTitle } })
+                    }
+                  />
+                  <Textarea
+                    title="Стэнфордские корни и глобальное видение"
+                    imgSrc={Eco1}
+                    value={form["ru"].aboutDesc}
+                    onChange={(aboutDesc) =>
+                      setForm({ ...form, ru: { ...form["ru"], aboutDesc } })
+                    }
+                  />
+                  <Textarea
+                    title="Команда менеджеров"
+                    imgSrc={Eco1}
+                    value={form["ru"].team}
+                    onChange={(team) =>
+                      setForm({ ...form, ru: { ...form["ru"], team } })
+                    }
+                  />
+                  <Textarea
+                    title="Совет директоров"
+                    imgSrc={Eco1}
+                    value={form["ru"].director}
+                    onChange={(director) =>
+                      setForm({ ...form, ru: { ...form["ru"], director } })
+                    }
+                  />
+                  <Textarea
+                    title="Наша история"
+                    imgSrc={Eco1}
+                    value={form["ru"].ourStory}
+                    onChange={(ourStory) =>
+                      setForm({ ...form, ru: { ...form["ru"], ourStory } })
+                    }
+                  />
+                </div>
+                <div className="en">
+                  <h2>EN</h2>
+                  <Textarea
+                    title="More than a startup"
+                    imgSrc={Eco1}
+                    value={form["en"].aboutTitle}
+                    onChange={(aboutTitle) =>
+                      setForm({ ...form, en: { ...form["en"], aboutTitle } })
+                    }
+                  />
+                  <Textarea
+                    title="With Stanford roots and global vision"
+                    imgSrc={Eco1}
+                    value={form["en"].aboutDesc}
+                    onChange={(aboutDesc) =>
+                      setForm({ ...form, en: { ...form["en"], aboutDesc } })
+                    }
+                  />
+                  <Textarea
+                    title="Management team"
+                    imgSrc={Eco1}
+                    value={form["en"].team}
+                    onChange={(team) =>
+                      setForm({ ...form, en: { ...form["en"], team } })
+                    }
+                  />
+                  <Textarea
+                    title="Board of Directors"
+                    imgSrc={Eco1}
+                    value={form["en"].director}
+                    onChange={(director) =>
+                      setForm({ ...form, en: { ...form["en"], director } })
+                    }
+                  />
+                  <Textarea
+                    title="Our story"
+                    imgSrc={Eco1}
+                    value={form["en"].ourStory}
+                    onChange={(ourStory) =>
+                      setForm({ ...form, en: { ...form["en"], ourStory } })
+                    }
+                  />
+                </div>
+              </div>
+              <Button type="submit" className="submitButton">
+                Save
+              </Button>
+            </form>
+            <form className="formTeam" onSubmit={handleCreateTeam}>
+              <div className="contentTeam">
+                <div className="ru">
+                  <Textarea
+                    title="Имя"
+                    imgSrc={Eco1}
+                    value={teamForm["ru"].fullName}
+                    onChange={(fullName) =>
+                      setTeamForm({
+                        ...teamForm,
+                        ru: { ...teamForm["ru"], fullName },
+                      })
+                    }
+                  />
+                  <Textarea
+                    title="Дольжность"
+                    imgSrc={Eco1}
+                    value={teamForm["ru"].position}
+                    onChange={(position) =>
+                      setTeamForm({
+                        ...teamForm,
+                        ru: { ...teamForm["ru"], position },
+                      })
+                    }
+                  />
+                  <Input
+                    title="Director"
+                    id="director"
+                    value={teamForm.director}
+                    type="select"
+                    onSelect={(option) =>
+                      setTeamForm({ ...teamForm, director: option })
+                    }
+                    options={["Yes", "No"]}
+                  />
+                </div>
+                <div className="ru">
+                  <Textarea
+                    title="FullName"
+                    imgSrc={Eco1}
+                    value={teamForm["en"].fullName}
+                    onChange={(fullName) =>
+                      setTeamForm({
+                        ...teamForm,
+                        en: { ...teamForm["en"], fullName },
+                      })
+                    }
+                  />
+                  <Textarea
+                    title="Position"
+                    imgSrc={Eco1}
+                    value={teamForm["en"].position}
+                    onChange={(position) =>
+                      setTeamForm({
+                        ...teamForm,
+                        en: { ...teamForm["en"], position },
+                      })
+                    }
+                  />
+                  {/* <Input
+                    title="Partner"
+                    id="partnerIds"
+                    value={teamForm.partnerIds}
+                    type="select"
+                    onSelect={(option) =>
+                      setTeamForm({ ...teamForm, partnerIds: option })
+                    }
+                    options={[partnerId]}
+                  /> */}
+                </div>
+              </div>
+              <Button type="submit" className="submitButton">
+                Save
+              </Button>
+            </form>
+            <form className="partner" onSubmit={handleSavePartner}>
+              <div className="contentPartner">
+                <div className="title">
+                  <span>Image Partner</span>
+                  <InfoIcon
+                    className="icon"
+                    style={{
+                      color: "crimson",
+                      backgroundColor: "rgba(255, 0, 0, 0.2)",
+                    }}
+                    onClick={() => setModalImg(true)}
+                  />
+                  <ModalCenter in={modalImg} onClose={() => setModalImg(false)}>
+                    <div style={{ width: "900px", height: "600px" }}>
+                      <img
+                        src={Eco1}
+                        onClick={() => setModalImg(false)}
+                        style={{ width: "100%", objectFit: "cover" }}
+                      />
+                    </div>
+                  </ModalCenter>
+                </div>
+                <div
+                  className=""
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Input
+                    // className={inputImg}
+                    placeholder="Name"
+                    type="string"
+                    value={partnerName}
+                    onInput={(value) => setPartnerName(value)}
+                  />
+                  <input
+                    type="file"
+                    className="inputImg"
+                    id="file"
+                    onChange={handleFileChange}
+                  />
+                  <img
+                    width={"150px"}
+                    height={"100px"}
+                    style={{ objectFit: "contain" }}
+                    src={
+                      file
+                        ? URL.createObjectURL(file)
+                        : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+                    }
+                    alt=""
+                  />
+                </div>
+                <Button type="submit" className="submitButton">
+                  Save
+                </Button>
+              </div>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,0 +1,226 @@
+.list {
+  display: flex;
+  width: 100%;
+  .listContainer {
+    flex: 6;
+    .home {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 20px;
+      gap: 20px;
+
+      .content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        width: 100%;
+        .ru {
+          display: flex;
+          justify-content: space-between;
+          flex-direction: column;
+          gap: 20px;
+          h2 {
+            color: #6439ff;
+          }
+          .boxarea {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+            border-radius: 10px;
+            gap: 10px;
+            .title {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              span {
+                font-weight: bold;
+                font-size: 14px;
+                color: rgb(160, 160, 160);
+              }
+              .icon {
+                font-size: 18px;
+                padding: 5px;
+                border-radius: 5px;
+                align-self: flex-end;
+              }
+            }
+            .textarea {
+              display: block;
+              font-size: 16px;
+              padding: 5px;
+              border-radius: 5px;
+              border: 2px solid gray;
+              resize: none;
+            }
+          }
+        }
+        .en {
+          display: flex;
+          justify-content: space-between;
+          flex-direction: column;
+          gap: 20px;
+          h2 {
+            color: #6439ff;
+          }
+          .boxarea {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+            border-radius: 10px;
+            gap: 10px;
+            .title {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              span {
+                font-weight: bold;
+                font-size: 14px;
+                color: rgb(160, 160, 160);
+              }
+              .icon {
+                font-size: 18px;
+                padding: 5px;
+                border-radius: 5px;
+                align-self: flex-end;
+              }
+            }
+            .textarea {
+              display: block;
+              font-size: 16px;
+              padding: 5px;
+              border-radius: 5px;
+              border: 2px solid gray;
+              resize: none;
+            }
+          }
+        }
+      }
+      .submitButton {
+        font-size: 1.2rem;
+        background: #6439ff;
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        padding: 10px 20px;
+        color: #fff;
+        border-radius: 0.7rem;
+        cursor: pointer;
+        transition: 100ms linear;
+        &:hover {
+          background: lighten(#6439ff, 7%);
+        }
+        &:active {
+          background: lighten(#6439ff, 14%);
+        }
+      }
+    }
+    .formTeam {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0 20px 20px 20px;
+      gap: 20px;
+      .contentTeam {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        width: 100%;
+      }
+      .ru{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+      }
+      .submitButton {
+        font-size: 1.2rem;
+        background: #6439ff;
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        padding: 10px 20px;
+        color: #fff;
+        border-radius: 0.7rem;
+        cursor: pointer;
+        transition: 100ms linear;
+        &:hover {
+          background: lighten(#6439ff, 7%);
+        }
+        &:active {
+          background: lighten(#6439ff, 14%);
+        }
+      }
+    }
+    .partner {
+      padding: 0 20px 20px 20px;
+      .contentPartner {
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        border-radius: 10px;
+        gap: 10px;
+
+        .submitButton {
+          font-size: 1.2rem;
+          background: #6439ff;
+          -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+          box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+          padding: 10px 20px;
+          width: 100%;
+          color: #fff;
+          border-radius: 0.7rem;
+          cursor: pointer;
+          transition: 100ms linear;
+          &:hover {
+            background: lighten(#6439ff, 7%);
+          }
+          &:active {
+            background: lighten(#6439ff, 14%);
+          }
+        }
+        .title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          span {
+            font-weight: bold;
+            font-size: 14px;
+            color: rgb(160, 160, 160);
+          }
+          .icon {
+            font-size: 18px;
+            padding: 5px;
+            border-radius: 5px;
+            align-self: flex-end;
+          }
+        }
+        .inputImg {
+          max-width: 300px;
+          color: gray;
+          font-size: 16px;
+          padding: 10px;
+          border-radius: 8px;
+          outline: none;
+          border: 2px solid gray;
+          &:focus {
+            border-bottom: 2px solid #5b5fc7;
+            border-radius: 4px 4px 2px 2px;
+          }
+
+          &:hover {
+            border: 2px solid #5b5fc7;
+          }
+        }
+      }
+    }
+  }
+}

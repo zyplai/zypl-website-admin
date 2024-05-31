@@ -70,7 +70,7 @@ const Sidebar = () => {
           {NAV_LINKS.map((link) => {
             const isActive = link.href === location.pathname;
             return (
-              <>
+              <div key={link.label}>
                 {link.desc && <p className="title">{link?.desc}</p>}
                 <Link to={link.href} style={{ textDecoration: "none" }}>
                   <li className={isActive ? "active" : ""}>
@@ -78,7 +78,7 @@ const Sidebar = () => {
                     <span>{link.label}</span>
                   </li>
                 </Link>
-              </>
+              </div>
             );
           })}
         </ul>
