@@ -12,6 +12,8 @@ import partnerApiService from "service/partner";
 import ModalCenter from "components/modal-center";
 import teamApiService from "service/team";
 import Input from "components/input";
+import MultiSelect from "components/multi-select";
+import { IPartnerGet, ITeamCreateData, ITeamGetData } from "types";
 
 const initialFormState = {
   ru: {
@@ -45,7 +47,12 @@ const initialFormStateTeam = {
 const About = () => {
   const [form, setForm] = useState(initialFormState);
   const [teamForm, setTeamForm] = useState(initialFormStateTeam);
-  const [partnerId, setPartnerId] = useState<string[]>([]);
+  const [partnerId, setPartnerId] = useState<IPartnerGet[]>([]);
+  const [getTeam, setGetTeam] = useState<ITeamGetData[] | null>([]);
+  const [getTeamLoading, setGetTeamLoading] = useState(false);
+  const [createPartner, setCreatePartner] = React.useState<
+    { id: string; name: string }[]
+  >([]);
   const [file, setFile] = useState<File | null>(null);
   const [partnerName, setPartnerName] = useState<string>("");
   const [pending, setPending] = useState(false);
@@ -78,13 +85,28 @@ const About = () => {
   }, [dataChanged]);
 
   React.useEffect(() => {
+    setGetTeamLoading(true);
+    teamApiService
+      .get()
+      .then((res: ITeamGetData[]) => setGetTeam(res))
+      .finally(() => setGetTeamLoading(false));
+  }, [dataChanged]);
+
+  // React.useEffect(() => {
+  //   setPending(true);
+  //   partnerApiService
+  //     .get()
+  //     .then((res) => {
+  //       const ids = res.map((e) => e.id);
+  //       setPartnerId(ids);
+  //     })
+  //     .finally(() => setPending(false));
+  // }, [dataChanged]);
+  React.useEffect(() => {
     setPending(true);
     partnerApiService
       .get()
-      .then((res) => {
-        const ids = res.map((e) => e.id);
-        setPartnerId(ids);
-      })
+      .then((res: IPartnerGet[]) => setPartnerId(res))
       .finally(() => setPending(false));
   }, [dataChanged]);
 
@@ -149,7 +171,11 @@ const About = () => {
     try {
       await partnerApiService
         .create(data)
-        .then((res) => toast.success(res.message));
+        .then((res) => toast.success(res.message))
+        .finally(() => {
+          setFile(null);
+          setPartnerName("");
+        });
       return;
     } catch (error: any) {
       toast.error(error.message);
@@ -167,9 +193,17 @@ const About = () => {
         fullName: teamForm.en.fullName,
         position: teamForm.en.position,
       },
+      // director: teamForm.director === "false",
       director: teamForm.director === "false",
-      partnerIds: partnerId,
+      partnerIds: createPartner.map((el) => el.id),
     });
+  };
+
+  const handleDeleteTeam = async (id: string) => {
+    await teamApiService.delete(`/${id}`).then((res) => {
+      toast.success(res.message);
+      setDataChanged(!dataChanged);
+    })
   };
 
   return (
@@ -333,16 +367,25 @@ const About = () => {
                       })
                     }
                   />
-                  {/* <Input
-                    title="Partner"
-                    id="partnerIds"
-                    value={teamForm.partnerIds}
-                    type="select"
-                    onSelect={(option) =>
-                      setTeamForm({ ...teamForm, partnerIds: option })
-                    }
-                    options={[partnerId]}
-                  /> */}
+                  <div className="">
+                    <MultiSelect
+                      list={partnerId}
+                      selectedList={createPartner.map((el) => el.name)}
+                      placeholder="Partner"
+                      onClear={() => setCreatePartner([])}
+                      onSelect={(id, value) => {
+                        if (createPartner.find((el) => el.name === value))
+                          setCreatePartner(
+                            createPartner.filter((e) => e.name !== value)
+                          );
+                        else
+                          setCreatePartner([
+                            ...createPartner,
+                            { id: id, name: value },
+                          ]);
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
               <Button type="submit" className="submitButton">
@@ -409,6 +452,41 @@ const About = () => {
                 </Button>
               </div>
             </form>
+            {getTeamLoading ? (
+              "Loading"
+            ) : (
+              <div className="team">
+                {getTeam?.map((item) => (
+                  <div className="managment_card">
+                    <img
+                      className="image"
+                      alt=""
+                      src={
+                        item.imgUrl ??
+                        "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+                      }
+                    />
+                    <div className="footer">
+                      <div className="title">{item.en.fullName}</div>
+                      <div className="description">{item.en.position}</div>
+                      <div className="partners">
+                        {item.partnerIds?.map((img) => (
+                          <div className="">
+                            <img src={img.imgUrl} alt="" />
+                          </div>
+                        ))}
+                      </div>
+                      <Button
+                        className="delete"
+                        onClick={() => handleDeleteTeam(item.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>

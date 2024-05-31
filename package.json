@@ -14,6 +14,7 @@
     "@types/react-lazy-load-image-component": "^1.6.4",
     "axios": "^1.7.1",
     "classnames": "^2.5.1",
+    "daler-ripple-box": "^1.1.8",
     "heic2any": "^0.0.4",
     "mathjs": "^12.4.2",
     "react": "^18.3.1",

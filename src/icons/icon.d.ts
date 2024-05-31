@@ -24,6 +24,8 @@ declare namespace IIcon {
     sortDown: React.ReactNode;
     sortUp: React.ReactNode;
     sort: React.ReactNode;
+    check: React.ReactNode;
+    chevronDown: React.ReactNode;
   }
 
   type name = keyof svgList;

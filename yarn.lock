@@ -4210,6 +4210,11 @@ d3-timer@^3.0.1:
   resolved "https://registry.yarnpkg.com/d3-timer/-/d3-timer-3.0.1.tgz#6284d2a2708285b1abb7e201eda4380af35e63b0"
   integrity sha512-ndfJ/JxxMd3nw31uyKoY2naivF+r29V+Lc0svZxe1JvvIRmi8hUsrMvdOwgS1o6uBHmiz91geQ0ylPP0aj1VUA==
 
+daler-ripple-box@^1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/daler-ripple-box/-/daler-ripple-box-1.1.8.tgz#ac9b72b0e7739216a7b34668eed383dc920f413c"
+  integrity sha512-n2gF+13laOuxLpzb0w6RbJ0GGJ22Q5bEFakDB+AaQL6qUkCKzZ+soIUXziZwZHzRDxj55e6df6sXMEcTR+qzjw==
+
 damerau-levenshtein@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/damerau-levenshtein/-/damerau-levenshtein-1.0.8.tgz#b43d286ccbd36bc5b2f7ed41caf2d0aba1f8a6e7"
