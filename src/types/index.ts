@@ -5,6 +5,7 @@ export * from "./home";
 export * from "./ecosystem";
 export * from "./contact";
 export * from "./about";
+export * from "./news"
 
 export interface IMessage {
   message: string;
