@@ -14,6 +14,7 @@ import teamApiService from "service/team";
 import Input from "components/input";
 import MultiSelect from "components/multi-select";
 import { IPartnerGet, ITeamCreateData, ITeamGetData } from "types";
+import Icon from "icons";
 
 const initialFormState = {
   ru: {
@@ -54,6 +55,7 @@ const About = () => {
     { id: string; name: string }[]
   >([]);
   const [file, setFile] = useState<File | null>(null);
+  const [fileTeam, setFileTeam] = useState<File | null>(null);
   const [partnerName, setPartnerName] = useState<string>("");
   const [pending, setPending] = useState(false);
   const [dataChanged, setDataChanged] = useState(false);
@@ -92,16 +94,6 @@ const About = () => {
       .finally(() => setGetTeamLoading(false));
   }, [dataChanged]);
 
-  // React.useEffect(() => {
-  //   setPending(true);
-  //   partnerApiService
-  //     .get()
-  //     .then((res) => {
-  //       const ids = res.map((e) => e.id);
-  //       setPartnerId(ids);
-  //     })
-  //     .finally(() => setPending(false));
-  // }, [dataChanged]);
   React.useEffect(() => {
     setPending(true);
     partnerApiService
@@ -171,7 +163,10 @@ const About = () => {
     try {
       await partnerApiService
         .create(data)
-        .then((res) => toast.success(res.message))
+        .then((res) => {
+          toast.success(res.message);
+          setDataChanged(!dataChanged);
+        })
         .finally(() => {
           setFile(null);
           setPartnerName("");
@@ -193,7 +188,6 @@ const About = () => {
         fullName: teamForm.en.fullName,
         position: teamForm.en.position,
       },
-      // director: teamForm.director === "false",
       director: teamForm.director === "false",
       partnerIds: createPartner.map((el) => el.id),
     });
@@ -203,7 +197,29 @@ const About = () => {
     await teamApiService.delete(`/${id}`).then((res) => {
       toast.success(res.message);
       setDataChanged(!dataChanged);
-    })
+    });
+  };
+  const handleDeletePartner = async (id: string) => {
+    await partnerApiService
+      .delete(`/${id}`)
+      .then((res) => {
+        toast.success(res.message);
+        setDataChanged(!dataChanged);
+      })
+      .catch((error: any) => toast.error(error.message));
+  };
+
+  const handleAddImageTeam = async (id: string) => {
+    const data = {
+      file: fileTeam,
+    };
+    await teamApiService
+      .addImage(`/${id}`, data)
+      .then((res) => {
+        toast.success(res.message);
+        setDataChanged(!dataChanged);
+      })
+      .catch((error: any) => toast.error(error.message));
   };
 
   return (
@@ -333,16 +349,18 @@ const About = () => {
                       })
                     }
                   />
-                  <Input
-                    title="Director"
-                    id="director"
-                    value={teamForm.director}
-                    type="select"
-                    onSelect={(option) =>
-                      setTeamForm({ ...teamForm, director: option })
-                    }
-                    options={["Yes", "No"]}
-                  />
+                  <div className="murliSelect">
+                    <Input
+                      title="Director"
+                      id="director"
+                      value={teamForm.director}
+                      type="select"
+                      onSelect={(option) =>
+                        setTeamForm({ ...teamForm, director: option })
+                      }
+                      options={["Yes", "No"]}
+                    />
+                  </div>
                 </div>
                 <div className="ru">
                   <Textarea
@@ -367,7 +385,7 @@ const About = () => {
                       })
                     }
                   />
-                  <div className="">
+                  <div className="murliSelect">
                     <MultiSelect
                       list={partnerId}
                       selectedList={createPartner.map((el) => el.name)}
@@ -392,6 +410,7 @@ const About = () => {
                 Save
               </Button>
             </form>
+
             <form className="partner" onSubmit={handleSavePartner}>
               <div className="contentPartner">
                 <div className="title">
@@ -423,7 +442,6 @@ const About = () => {
                   }}
                 >
                   <Input
-                    // className={inputImg}
                     placeholder="Name"
                     type="string"
                     value={partnerName}
@@ -450,8 +468,27 @@ const About = () => {
                 <Button type="submit" className="submitButton">
                   Save
                 </Button>
+                <div
+                  className=""
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {partnerId.map((item) => (
+                    <div className="partnerImage">
+                      <img src={item.imgUrl} alt="" />
+                      <Button onClick={() => handleDeletePartner(item.id)}>
+                        <Icon name="trash" className="iconTrash" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </form>
+
             {getTeamLoading ? (
               "Loading"
             ) : (
@@ -466,13 +503,39 @@ const About = () => {
                         "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
                       }
                     />
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <input
+                        type="file"
+                        className="inputImg"
+                        id="file"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          const files = e.target.files;
+                          if (files?.[0]) {
+                            setFileTeam(files[0]);
+                          }
+                        }}
+                      />
+                      <Button
+                        style={{ background: "#6439ff", color: "white" }}
+                        onClick={() => handleAddImageTeam(item.id)}
+                      >
+                        Save
+                      </Button>
+                    </div>
                     <div className="footer">
                       <div className="title">{item.en.fullName}</div>
                       <div className="description">{item.en.position}</div>
                       <div className="partners">
-                        {item.partnerIds?.map((img) => (
+                        {item.partnerIds?.map((el) => (
                           <div className="">
-                            <img src={img.imgUrl} alt="" />
+                            <img src={el.imgUrl} alt="" />
+                            <span>{el.name}</span>
                           </div>
                         ))}
                       </div>

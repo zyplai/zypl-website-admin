@@ -27,6 +27,9 @@ export interface IPartnerCreate {
   name: string;
   file: File | null;
 }
+export interface IAddImageTeam {
+  file: File | null;
+}
 export interface ITeam {
   fullName: string;
   position: string;

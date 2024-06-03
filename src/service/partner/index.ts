@@ -8,6 +8,9 @@ const partnerApiService = {
   get(): Promise<IPartnerGet[]> {
     return baseApiService.GET("/partner/get");
   },
+  delete(id:string): Promise<IMessage> {
+    return baseApiService.DELETE(`/partner/delete${id}`);
+  },
 };
 
 export default partnerApiService;
