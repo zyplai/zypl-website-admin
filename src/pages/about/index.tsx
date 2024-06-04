@@ -468,23 +468,21 @@ const About = () => {
                 <Button type="submit" className="submitButton">
                   Save
                 </Button>
+                <div style={{display:'flex', flexWrap:"wrap", }} >
                 <div
-                  className=""
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                  }}
+                  className="partnerItem"
                 >
                   {partnerId.map((item) => (
                     <div className="partnerImage">
+                      <div className="partnerQe">
                       <img src={item.imgUrl} alt="" />
                       <Button onClick={() => handleDeletePartner(item.id)}>
                         <Icon name="trash" className="iconTrash" />
                       </Button>
+                      </div>
                     </div>
                   ))}
+                </div>
                 </div>
               </div>
             </form>
