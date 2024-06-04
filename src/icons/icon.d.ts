@@ -27,6 +27,7 @@ declare namespace IIcon {
     check: React.ReactNode;
     chevronDown: React.ReactNode;
     trash: React.ReactNode;
+    pencil: React.ReactNode;
   }
 
   type name = keyof svgList;

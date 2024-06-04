@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import "./about.scss";
-import Eco1 from "../../assets/screenshot/eco1.png";
+import About1 from "../../assets/screenshot/about1.png";
+import About2 from "../../assets/screenshot/about2.png";
+import About3 from "../../assets/screenshot/about3.png";
+import About4 from "../../assets/screenshot/about4.png";
+import About5 from "../../assets/screenshot/about5.png";
+import About6 from "../../assets/screenshot/about6.png";
+import About7 from "../../assets/screenshot/about7.png";
+import About8 from "../../assets/screenshot/about8.png";
 import Sidebar from "components/sidebar/Sidebar";
 import Navbar from "components/navbar/Navbar";
 import Textarea from "components/textarea";
@@ -15,6 +22,7 @@ import Input from "components/input";
 import MultiSelect from "components/multi-select";
 import { IPartnerGet, ITeamCreateData, ITeamGetData } from "types";
 import Icon from "icons";
+import { error } from "console";
 
 const initialFormState = {
   ru: {
@@ -60,6 +68,7 @@ const About = () => {
   const [pending, setPending] = useState(false);
   const [dataChanged, setDataChanged] = useState(false);
   const [modalImg, setModalImg] = useState(false);
+  const [modalFullname, setModalFullname] = useState(false);
 
   React.useEffect(() => {
     setPending(true);
@@ -179,18 +188,24 @@ const About = () => {
 
   const handleCreateTeam = async (e: React.FormEvent) => {
     e.preventDefault();
-    await teamApiService.create({
-      ru: {
-        fullName: teamForm.ru.fullName,
-        position: teamForm.ru.position,
-      },
-      en: {
-        fullName: teamForm.en.fullName,
-        position: teamForm.en.position,
-      },
-      director: teamForm.director === "false",
-      partnerIds: createPartner.map((el) => el.id),
-    });
+    await teamApiService
+      .create({
+        ru: {
+          fullName: teamForm.ru.fullName,
+          position: teamForm.ru.position,
+        },
+        en: {
+          fullName: teamForm.en.fullName,
+          position: teamForm.en.position,
+        },
+        director: teamForm.director === "false",
+        partnerIds: createPartner.map((el) => el.id),
+      })
+      .then((res) => {
+        toast.success(res.message);
+        setDataChanged(!dataChanged);
+      })
+      .catch((error: any) => toast.error(error.message));
   };
 
   const handleDeleteTeam = async (id: string) => {
@@ -218,7 +233,19 @@ const About = () => {
       .then((res) => {
         toast.success(res.message);
         setDataChanged(!dataChanged);
+        setFileTeam(null);
       })
+      .catch((error: any) => toast.error(error.message));
+  };
+
+  const handleEditTeamName = async (id: string) => {
+    await teamApiService
+      .updateNameTeam(`/${id}`, {
+        fullName: teamForm.en.fullName,
+        position: teamForm.en.position,
+      })
+      .then((res) => toast.success(res.message))
+      .finally(() => setModalImg(false))
       .catch((error: any) => toast.error(error.message));
   };
 
@@ -237,7 +264,7 @@ const About = () => {
                   <h2>RU</h2>
                   <Textarea
                     title="Больше, чем стартап"
-                    imgSrc={Eco1}
+                    imgSrc={About1}
                     value={form["ru"].aboutTitle}
                     onChange={(aboutTitle) =>
                       setForm({ ...form, ru: { ...form["ru"], aboutTitle } })
@@ -245,7 +272,7 @@ const About = () => {
                   />
                   <Textarea
                     title="Стэнфордские корни и глобальное видение"
-                    imgSrc={Eco1}
+                    imgSrc={About2}
                     value={form["ru"].aboutDesc}
                     onChange={(aboutDesc) =>
                       setForm({ ...form, ru: { ...form["ru"], aboutDesc } })
@@ -253,7 +280,7 @@ const About = () => {
                   />
                   <Textarea
                     title="Команда менеджеров"
-                    imgSrc={Eco1}
+                    imgSrc={About3}
                     value={form["ru"].team}
                     onChange={(team) =>
                       setForm({ ...form, ru: { ...form["ru"], team } })
@@ -261,7 +288,7 @@ const About = () => {
                   />
                   <Textarea
                     title="Совет директоров"
-                    imgSrc={Eco1}
+                    imgSrc={About7}
                     value={form["ru"].director}
                     onChange={(director) =>
                       setForm({ ...form, ru: { ...form["ru"], director } })
@@ -269,7 +296,7 @@ const About = () => {
                   />
                   <Textarea
                     title="Наша история"
-                    imgSrc={Eco1}
+                    imgSrc={About8}
                     value={form["ru"].ourStory}
                     onChange={(ourStory) =>
                       setForm({ ...form, ru: { ...form["ru"], ourStory } })
@@ -280,7 +307,7 @@ const About = () => {
                   <h2>EN</h2>
                   <Textarea
                     title="More than a startup"
-                    imgSrc={Eco1}
+                    imgSrc={About1}
                     value={form["en"].aboutTitle}
                     onChange={(aboutTitle) =>
                       setForm({ ...form, en: { ...form["en"], aboutTitle } })
@@ -288,7 +315,7 @@ const About = () => {
                   />
                   <Textarea
                     title="With Stanford roots and global vision"
-                    imgSrc={Eco1}
+                    imgSrc={About2}
                     value={form["en"].aboutDesc}
                     onChange={(aboutDesc) =>
                       setForm({ ...form, en: { ...form["en"], aboutDesc } })
@@ -296,7 +323,7 @@ const About = () => {
                   />
                   <Textarea
                     title="Management team"
-                    imgSrc={Eco1}
+                    imgSrc={About3}
                     value={form["en"].team}
                     onChange={(team) =>
                       setForm({ ...form, en: { ...form["en"], team } })
@@ -304,7 +331,7 @@ const About = () => {
                   />
                   <Textarea
                     title="Board of Directors"
-                    imgSrc={Eco1}
+                    imgSrc={About7}
                     value={form["en"].director}
                     onChange={(director) =>
                       setForm({ ...form, en: { ...form["en"], director } })
@@ -312,7 +339,7 @@ const About = () => {
                   />
                   <Textarea
                     title="Our story"
-                    imgSrc={Eco1}
+                    imgSrc={About8}
                     value={form["en"].ourStory}
                     onChange={(ourStory) =>
                       setForm({ ...form, en: { ...form["en"], ourStory } })
@@ -329,7 +356,7 @@ const About = () => {
                 <div className="ru">
                   <Textarea
                     title="Имя"
-                    imgSrc={Eco1}
+                    imgSrc={About4}
                     value={teamForm["ru"].fullName}
                     onChange={(fullName) =>
                       setTeamForm({
@@ -340,7 +367,7 @@ const About = () => {
                   />
                   <Textarea
                     title="Дольжность"
-                    imgSrc={Eco1}
+                    imgSrc={About5}
                     value={teamForm["ru"].position}
                     onChange={(position) =>
                       setTeamForm({
@@ -365,7 +392,7 @@ const About = () => {
                 <div className="ru">
                   <Textarea
                     title="FullName"
-                    imgSrc={Eco1}
+                    imgSrc={About4}
                     value={teamForm["en"].fullName}
                     onChange={(fullName) =>
                       setTeamForm({
@@ -376,7 +403,7 @@ const About = () => {
                   />
                   <Textarea
                     title="Position"
-                    imgSrc={Eco1}
+                    imgSrc={About5}
                     value={teamForm["en"].position}
                     onChange={(position) =>
                       setTeamForm({
@@ -426,7 +453,7 @@ const About = () => {
                   <ModalCenter in={modalImg} onClose={() => setModalImg(false)}>
                     <div style={{ width: "900px", height: "600px" }}>
                       <img
-                        src={Eco1}
+                        src={About6}
                         onClick={() => setModalImg(false)}
                         style={{ width: "100%", objectFit: "cover" }}
                       />
@@ -468,21 +495,19 @@ const About = () => {
                 <Button type="submit" className="submitButton">
                   Save
                 </Button>
-                <div style={{display:'flex', flexWrap:"wrap", }} >
-                <div
-                  className="partnerItem"
-                >
-                  {partnerId.map((item) => (
-                    <div className="partnerImage">
-                      <div className="partnerQe">
-                      <img src={item.imgUrl} alt="" />
-                      <Button onClick={() => handleDeletePartner(item.id)}>
-                        <Icon name="trash" className="iconTrash" />
-                      </Button>
+                <div style={{ display: "flex", flexWrap: "wrap" }}>
+                  <div className="partnerItem">
+                    {partnerId.map((item) => (
+                      <div className="partnerImage">
+                        <div className="partnerQe">
+                          <img src={item.imgUrl} alt="" />
+                          <Button onClick={() => handleDeletePartner(item.id)}>
+                            <Icon name="trash" className="iconTrash" />
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </form>
@@ -526,24 +551,72 @@ const About = () => {
                         Save
                       </Button>
                     </div>
-                    <div className="footer">
-                      <div className="title">{item.en.fullName}</div>
-                      <div className="description">{item.en.position}</div>
-                      <div className="partners">
-                        {item.partnerIds?.map((el) => (
-                          <div className="">
-                            <img src={el.imgUrl} alt="" />
-                            <span>{el.name}</span>
-                          </div>
-                        ))}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <div>
+                        <div className="title">{item.en.fullName}</div>
+                        <div className="description">{item.en.position}</div>
                       </div>
-                      <Button
-                        className="delete"
-                        onClick={() => handleDeleteTeam(item.id)}
+                      <button
+                        className="add_button"
+                        onClick={() => setModalFullname(true)}
                       >
-                        Delete
-                      </Button>
+                        <Icon name="pencil" size={18} />
+                      </button>
                     </div>
+                    <ModalCenter
+                      in={modalFullname}
+                      onClose={() => setModalFullname(false)}
+                    >
+                      <div className="editTeam">
+                        <div className="editContent">
+                          <Textarea
+                            title="FullName"
+                            imgSrc={About3}
+                            value={teamForm["en"].fullName}
+                            onChange={(fullName) =>
+                              setTeamForm({
+                                ...teamForm,
+                                en: { ...teamForm["en"], fullName },
+                              })
+                            }
+                          />
+                          <Textarea
+                            title="Position"
+                            imgSrc={About3}
+                            value={teamForm["en"].position}
+                            onChange={(position) =>
+                              setTeamForm({
+                                ...teamForm,
+                                en: { ...teamForm["en"], position },
+                              })
+                            }
+                          />
+                          <Button onClick={() => handleEditTeamName(item.id)}>
+                            Save
+                          </Button>
+                        </div>
+                      </div>
+                    </ModalCenter>
+                    <div className="partners">
+                      {item.partnerIds?.map((el) => (
+                        <div className="">
+                          <img src={el.imgUrl} alt="qwe" />
+                          <span>{el.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <Button
+                      className="delete"
+                      onClick={() => handleDeleteTeam(item.id)}
+                    >
+                      Delete
+                    </Button>
                   </div>
                 ))}
               </div>
