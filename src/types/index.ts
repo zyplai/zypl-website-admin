@@ -1,5 +1,3 @@
-import { string } from "mathjs";
-
 export * from "./auth";
 export * from "./home";
 export * from "./ecosystem";
@@ -7,6 +5,7 @@ export * from "./contact";
 export * from "./about";
 export * from "./news";
 export * from "./vacancy";
+export * from "./editor";
 
 export interface IMessage {
   message: string;

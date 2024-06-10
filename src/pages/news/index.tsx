@@ -8,6 +8,11 @@ import News2 from "../../assets/screenshot/news2.png";
 import Button from "@mui/material/Button";
 import newsApiService from "service/news";
 import { toast } from "react-toastify";
+import EditorJS from "@editorjs/editorjs";
+import { EDITOR_JS_TOOLS } from "utils/constants";
+import { createReactEditorJS } from "react-editor-js";
+import axios from "axios";
+import { EditorOutputData, INewsItemCreateData, TNewsItemData } from "types";
 
 const initialFormState = {
   ru: {
@@ -19,11 +24,55 @@ const initialFormState = {
     newsDesc: "",
   },
 };
+const initialTitleState = {
+  ru: {
+    title: "",
+  },
+  en: {
+    title: "",
+  },
+};
+
+const initialFormStateEditor = {
+  editor: {},
+};
 
 const News = () => {
   const [form, setForm] = useState(initialFormState);
   const [pending, setPending] = useState(false);
   const [dataChanged, setDataChanged] = useState(false);
+  const [editorText, setEditorText] = useState(initialFormStateEditor);
+  const [editorTitle, setEditorTitle] = useState(initialTitleState);
+
+  const instanceRef = React.useRef<any>(null);
+
+  async function handleSave() {
+    if (instanceRef.current) {
+      const savedData = await instanceRef.current.save();
+      setEditorText(savedData);
+      sendDataToBackend(savedData);
+    }
+  }
+  const sendDataToBackend = async (data: TNewsItemData) => {
+    try {
+      const res = await axios
+        .post("http://localhost:8000/news-item/create", {
+          ru: {
+            editor: editorText,
+            title: editorTitle.ru,
+          },
+          en: {
+            title: editorTitle.en,
+            editor: editorText,
+          },
+        })
+        .then((res) => res.data);
+    } catch (error) {
+      console.error("Error sending data to backend:", error);
+    }
+  };
+
+  const ReactEditorJS = createReactEditorJS();
 
   React.useEffect(() => {
     setPending(true);
@@ -122,6 +171,55 @@ const News = () => {
             Save
           </Button>
         </form>
+        <div className="home">
+          <div className="content">
+            <div className="ru">
+              <h2>RU</h2>
+              <Textarea
+                title="Спокойные воды приносят огромные штормы"
+                imgSrc={News1}
+                value={editorTitle["ru"].title}
+                onChange={(title) =>
+                  setEditorTitle({
+                    ...editorTitle,
+                    ru: { ...editorTitle["ru"], title },
+                  })
+                }
+              />
+              <ReactEditorJS
+                onInitialize={(instance: any) => {
+                  instanceRef.current = instance;
+                }}
+                tools={EDITOR_JS_TOOLS}
+                // defaultValue={editorText.editor}
+              />
+              <button onClick={handleSave}>Save!</button>
+            </div>
+            <div className="en">
+              <h2>EN</h2>
+              <Textarea
+                title="Calm waters deliver huge storms"
+                imgSrc={News1}
+                value={editorTitle["en"].title}
+                onChange={(title) =>
+                  setEditorTitle({
+                    ...editorTitle,
+                    en: { ...editorTitle["en"], title },
+                  })
+                }
+              />
+              <ReactEditorJS
+                onInitialize={(instance: any) => {
+                  instanceRef.current = instance;
+                }}
+                tools={EDITOR_JS_TOOLS}
+                // defaultValue={editorText.editor}
+              />
+              <button onClick={handleSave}>Save!</button>
+            </div>
+              
+          </div>
+        </div>
       </div>
     </div>
   );

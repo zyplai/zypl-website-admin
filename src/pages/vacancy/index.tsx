@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./vacancy.scss";
 import Sidebar from "components/sidebar/Sidebar";
 import Navbar from "components/navbar/Navbar";
@@ -8,6 +8,7 @@ import Textarea from "components/textarea";
 import Vacancy1 from "../../assets/screenshot/vacancy1.png";
 import Vacancy2 from "../../assets/screenshot/vacancy2.png";
 import { Button } from "@mui/material";
+import axios from "axios";
 
 const initialFormState = {
   ru: {
@@ -24,6 +25,21 @@ const Vacancy = () => {
   const [form, setForm] = useState(initialFormState);
   const [pending, setPending] = useState(false);
   const [dataChanged, setDataChanged] = useState(false);
+  // const editorInstance = useRef<typeof EditorJSComponent | null>(null)
+  // const [note, setNote] = useState<null>(null)
+  // const [loading, setLoading] = useState(false)
+
+
+  // React.useEffect(() => {
+  //   setLoading(true)
+  //   axios.post("http://localhost:8000/news-item/create")
+      
+  //     .then((note) => {
+  //       setNote(note.data)
+  //     })
+  //     .finally(() => setLoading(false))
+  // }, [])
+
 
   React.useEffect(() => {
     setPending(true);

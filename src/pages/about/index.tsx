@@ -23,6 +23,7 @@ import MultiSelect from "components/multi-select";
 import { IPartnerGet, ITeamCreateData, ITeamGetData } from "types";
 import Icon from "icons";
 import { error } from "console";
+import transcript from "utils/transcript";
 
 const initialFormState = {
   ru: {
@@ -102,6 +103,8 @@ const About = () => {
       .then((res: ITeamGetData[]) => setGetTeam(res))
       .finally(() => setGetTeamLoading(false));
   }, [dataChanged]);
+
+  console.log(getTeam?.map((item) => item.partners?.map((el) => el.name)));
 
   React.useEffect(() => {
     setPending(true);
@@ -198,7 +201,7 @@ const About = () => {
           fullName: teamForm.en.fullName,
           position: teamForm.en.position,
         },
-        director: teamForm.director === "false",
+        director: Boolean(transcript.director(teamForm.director)),
         partnerIds: createPartner.map((el) => el.id),
       })
       .then((res) => {
@@ -604,10 +607,9 @@ const About = () => {
                       </div>
                     </ModalCenter>
                     <div className="partners">
-                      {item.partnerIds?.map((el) => (
+                      {item.partners?.map((el) => (
                         <div className="">
                           <img src={el.imgUrl} alt="qwe" />
-                          <span>{el.name}</span>
                         </div>
                       ))}
                     </div>

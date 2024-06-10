@@ -41,19 +41,20 @@ export interface ITeamCreateData {
   director?: boolean;
   partnerIds: string[];
 }
+export interface Partner {
+  id: string;
+  name: string;
+  imgUrl: string;
+  createdAt: string;
+  updatedAt: string;
+}
 export interface ITeamGetData {
   id: string;
   imgUrl: string;
   ru: ITeam;
   en: ITeam;
   director?: boolean;
-  partnerIds: {
-    id: string;
-    name: string;
-    imgUrl: string;
-    createdAt: string;
-    updatedAt: string;
-  }[];
+  partners: Partner[];
 }
 export interface ITeamGet {}
 
