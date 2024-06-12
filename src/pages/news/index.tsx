@@ -13,6 +13,9 @@ import { EDITOR_JS_TOOLS } from "utils/constants";
 import { createReactEditorJS } from "react-editor-js";
 import axios from "axios";
 import { EditorOutputData, INewsItemCreateData, TNewsItemData } from "types";
+import Icon from "icons";
+import EditNews from "components/edit-news";
+import ModalCenter from "components/modal-center";
 
 const initialFormState = {
   ru: {
@@ -25,10 +28,10 @@ const initialFormState = {
   },
 };
 const initialTitleState = {
-  ru: {
+  en: {
     title: "",
   },
-  en: {
+  ru: {
     title: "",
   },
 };
@@ -43,8 +46,12 @@ const News = () => {
   const [dataChanged, setDataChanged] = useState(false);
   const [editorText, setEditorText] = useState(initialFormStateEditor);
   const [editorTitle, setEditorTitle] = useState(initialTitleState);
+  const [newsItem, setNewsItem] = useState<INewsItemCreateData[] | null>([]);
+  const [fileNews, setFileNews] = useState<File | null>(null);
+  const [modalNews, setModalNews] = useState(false);
 
   const instanceRef = React.useRef<any>(null);
+  const ReactEditorJS = createReactEditorJS();
 
   async function handleSave() {
     if (instanceRef.current) {
@@ -58,21 +65,22 @@ const News = () => {
       const res = await axios
         .post("http://localhost:8000/news-item/create", {
           ru: {
+            title: editorTitle.ru.title,
             editor: editorText,
-            title: editorTitle.ru,
           },
           en: {
-            title: editorTitle.en,
+            title: editorTitle.en.title,
             editor: editorText,
           },
         })
-        .then((res) => res.data);
-    } catch (error) {
-      console.error("Error sending data to backend:", error);
+        .then((res) => res.data)
+        .finally(() => {
+          setDataChanged(!dataChanged);
+        });
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
-
-  const ReactEditorJS = createReactEditorJS();
 
   React.useEffect(() => {
     setPending(true);
@@ -93,6 +101,13 @@ const News = () => {
       .finally(() => setPending(false));
   }, [dataChanged]);
 
+  React.useEffect(() => {
+    newsApiService
+      .getNews()
+      .then((res: INewsItemCreateData[]) => setNewsItem(res))
+      .finally(() => setPending(false));
+  }, [dataChanged]);
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -102,7 +117,7 @@ const News = () => {
             main: {
               title: form.ru.newsTitle,
               description: form.ru.newsDesc,
-            },
+            }
           },
           en: {
             main: {
@@ -119,6 +134,30 @@ const News = () => {
     } catch (error) {
       toast.error("Error!");
     }
+  };
+
+  const handleAddImageTeam = async (id: string) => {
+    const data = {
+      file: fileNews,
+    };
+    await newsApiService
+      .addImageNews(`/${id}`, data)
+      .then((res) => {
+        toast.success(res.message);
+        setDataChanged(!dataChanged);
+        setFileNews(null);
+      })
+      .catch((error: any) => toast.error(error.message));
+  };
+
+  const handleDeletePartner = async (id: string) => {
+    await newsApiService
+      .deleteNews(`/${id}`)
+      .then((res) => {
+        toast.success(res.message);
+        setDataChanged(!dataChanged);
+      })
+      .catch((error: any) => toast.error(error.message));
   };
 
   return (
@@ -176,7 +215,7 @@ const News = () => {
             <div className="ru">
               <h2>RU</h2>
               <Textarea
-                title="Спокойные воды приносят огромные штормы"
+                title="Заголовок"
                 imgSrc={News1}
                 value={editorTitle["ru"].title}
                 onChange={(title) =>
@@ -186,19 +225,11 @@ const News = () => {
                   })
                 }
               />
-              <ReactEditorJS
-                onInitialize={(instance: any) => {
-                  instanceRef.current = instance;
-                }}
-                tools={EDITOR_JS_TOOLS}
-                // defaultValue={editorText.editor}
-              />
-              <button onClick={handleSave}>Save!</button>
             </div>
             <div className="en">
               <h2>EN</h2>
               <Textarea
-                title="Calm waters deliver huge storms"
+                title="Title"
                 imgSrc={News1}
                 value={editorTitle["en"].title}
                 onChange={(title) =>
@@ -208,16 +239,67 @@ const News = () => {
                   })
                 }
               />
-              <ReactEditorJS
-                onInitialize={(instance: any) => {
-                  instanceRef.current = instance;
-                }}
-                tools={EDITOR_JS_TOOLS}
-                // defaultValue={editorText.editor}
-              />
-              <button onClick={handleSave}>Save!</button>
             </div>
-              
+          </div>
+          <div className="boxarea">
+            <ReactEditorJS
+              onInitialize={(instance: any) => {
+                instanceRef.current = instance;
+              }}
+              tools={EDITOR_JS_TOOLS}
+              defaultValue={""}
+            />
+            <Button className="submitButton" onClick={handleSave}>
+              Save!
+            </Button>
+          </div>
+        </div>
+        <div className="home">
+          <div className="content contentNews">
+            {newsItem?.map((el) => (
+              <div
+                className="boxarea"
+                style={{ width: "300px" }}
+                key={el.id}
+                // onClick={() => setModalNews(true)}
+              >
+                <img
+                  src={
+                    el.titleImage ??
+                    "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+                  }
+                />
+                <input
+                  type="file"
+                  className="inputImg"
+                  id="file"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const files = e.target.files;
+                    if (files?.[0]) {
+                      setFileNews(files[0]);
+                    }
+                  }}
+                />
+                <Button
+                  style={{ background: "#6439ff", color: "white" }}
+                  onClick={() => handleAddImageTeam(el.id)}
+                >
+                  Save
+                </Button>
+                <h2>{el.en.title}</h2>
+                {/* <div>{el.en.editor?.blocks?.map((el) => el.data.text)}</div> */}
+                <Button
+                  onClick={() => handleDeletePartner(el.id)}
+                  className="delete"
+                  style={{ background: "red", color: "white" }}
+                >
+                  Delete
+                </Button>
+                {/* <ModalCenter in={modalNews} onClose={() => setModalNews(false)}>
+                  <EditNews list={el.en.editor?.blocks?.map((el) => ({text: el.data.text}))} />
+                </ModalCenter> */}
+              </div>
+            ))}
           </div>
         </div>
       </div>

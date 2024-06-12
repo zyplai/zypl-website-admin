@@ -21,7 +21,14 @@ export interface EditorOutputData {
 export type TNewsItemData = { title: string; editor: EditorOutputData };
 
 export interface INewsItemCreateData {
+  id: string;
   titleImage?: string;
+  en: TNewsItemData;
+  ru: TNewsItemData;
+}
+export interface TVacancyItemCreateData {
+  id: string
+  icon?: string;
   en: TNewsItemData;
   ru: TNewsItemData;
 }

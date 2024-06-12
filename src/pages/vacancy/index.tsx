@@ -9,6 +9,15 @@ import Vacancy1 from "../../assets/screenshot/vacancy1.png";
 import Vacancy2 from "../../assets/screenshot/vacancy2.png";
 import { Button } from "@mui/material";
 import axios from "axios";
+import { EDITOR_JS_TOOLS } from "utils/constants";
+import { createReactEditorJS } from "react-editor-js";
+import {
+  EditorOutputData,
+  INewsItemCreateData,
+  TNewsItemData,
+  TVacancyItemCreateData,
+} from "types";
+import baseApiService from "service/base";
 
 const initialFormState = {
   ru: {
@@ -20,26 +29,65 @@ const initialFormState = {
     vacancyDesc: "",
   },
 };
+const initialTitleState = {
+  en: {
+    title: "",
+  },
+  ru: {
+    title: "",
+  },
+};
+
+const initialFormStateEditor = {
+  editor: {},
+};
 
 const Vacancy = () => {
   const [form, setForm] = useState(initialFormState);
   const [pending, setPending] = useState(false);
   const [dataChanged, setDataChanged] = useState(false);
-  // const editorInstance = useRef<typeof EditorJSComponent | null>(null)
-  // const [note, setNote] = useState<null>(null)
-  // const [loading, setLoading] = useState(false)
+  const [editorText, setEditorText] = useState(initialFormStateEditor);
+  const [editorTitle, setEditorTitle] = useState(initialTitleState);
+  const [newsItem, setNewsItem] = useState<TVacancyItemCreateData[] | null>([]);
+  const [fileNews, setFileNews] = useState<File | null>(null);
+  const instanceRef = React.useRef<any>(null);
+  const ReactEditorJS = createReactEditorJS();
 
+  async function handleSave() {
+    if (instanceRef.current) {
+      const savedData = await instanceRef.current.save();
+      setEditorText(savedData);
+      sendDataToBackend(savedData);
+    }
+  }
+  const sendDataToBackend = async (data: TNewsItemData) => {
+    try {
+      await baseApiService
+        .POST("vacancy-item/create", {
+          ru: {
+            title: editorTitle.ru.title,
+            editor: editorText,
+          },
+          en: {
+            title: editorTitle.en.title,
+            editor: editorText,
+          },
+        })
+        .then((res) => res.data)
+        .finally(() => {
+          setDataChanged(!dataChanged);
+        });
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
-  // React.useEffect(() => {
-  //   setLoading(true)
-  //   axios.post("http://localhost:8000/news-item/create")
-      
-  //     .then((note) => {
-  //       setNote(note.data)
-  //     })
-  //     .finally(() => setLoading(false))
-  // }, [])
-
+  React.useEffect(() => {
+    vacancyApiService
+      .getVacancy()
+      .then((res: TVacancyItemCreateData[]) => setNewsItem(res))
+      .finally(() => setPending(false));
+  }, [dataChanged]);
 
   React.useEffect(() => {
     setPending(true);
@@ -86,6 +134,30 @@ const Vacancy = () => {
     } catch (error) {
       toast.error("Error!");
     }
+  };
+
+  const handleAddImageTeam = async (id: string) => {
+    const data = {
+      file: fileNews,
+    };
+    await vacancyApiService
+      .addIconsVacancy(`/${id}`, data)
+      .then((res) => {
+        toast.success(res.message);
+        setDataChanged(!dataChanged);
+        setFileNews(null);
+      })
+      .catch((error: any) => toast.error(error.message));
+  };
+
+  const handleDeletePartner = async (id: string) => {
+    await vacancyApiService
+      .deleteVacancy(`/${id}`)
+      .then((res) => {
+        toast.success(res.message);
+        setDataChanged(!dataChanged);
+      })
+      .catch((error: any) => toast.error(error.message));
   };
 
   return (
@@ -138,6 +210,99 @@ const Vacancy = () => {
             Save
           </Button>
         </form>
+        <div className="home">
+          <div className="content">
+            <div className="ru">
+              <h2>RU</h2>
+              <Textarea
+                title="Заголовок"
+                imgSrc={Vacancy1}
+                value={editorTitle["ru"].title}
+                onChange={(title) =>
+                  setEditorTitle({
+                    ...editorTitle,
+                    ru: { ...editorTitle["ru"], title },
+                  })
+                }
+              />
+            </div>
+            <div className="en">
+              <h2>EN</h2>
+              <Textarea
+                title="Title"
+                imgSrc={Vacancy1}
+                value={editorTitle["en"].title}
+                onChange={(title) =>
+                  setEditorTitle({
+                    ...editorTitle,
+                    en: { ...editorTitle["en"], title },
+                  })
+                }
+              />
+            </div>
+          </div>
+          <div className="boxarea">
+            <ReactEditorJS
+              onInitialize={(instance: any) => {
+                instanceRef.current = instance;
+              }}
+              tools={EDITOR_JS_TOOLS}
+            />
+            <Button className="submitButton" onClick={handleSave}>
+              Save!
+            </Button>
+          </div>
+        </div>
+        <div className="home">
+          <div className="content contentNews">
+            {newsItem?.map((el) => (
+              <div
+                className="boxarea"
+                style={{ width: "300px" }}
+                key={el.id}
+                // onClick={() => setModalNews(true)}
+              >
+                <img
+                  width={"100px"}
+                  height={"100px"}
+                  src={
+                    el.icon ??
+                    "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+                  }
+                />
+                <input
+                  type="file"
+                  className="inputImg"
+                  id="file"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const files = e.target.files;
+                    if (files?.[0]) {
+                      setFileNews(files[0]);
+                    }
+                  }}
+                />
+                <Button
+                  style={{ background: "#6439ff", color: "white" }}
+                  onClick={() => handleAddImageTeam(el.id)}
+                >
+                  Save
+                </Button>
+                <h2>{el.en.title}</h2>
+                {/* <div>{el.en.editor?.blocks?.map((el) => el.data.text)}</div> */}
+                <Button
+                  onClick={() => handleDeletePartner(el.id)}
+                  className="delete"
+                  style={{ background: "red", color: "white" }}
+                >
+                  Delete
+                </Button>
+                {/* <ModalCenter in={modalNews} onClose={() => setModalNews(false)}>
+                  <EditNews list={el.en.editor?.blocks?.map((el) => ({text: el.data.text}))} />
+                </ModalCenter> */}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

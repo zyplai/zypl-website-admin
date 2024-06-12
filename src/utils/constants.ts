@@ -13,52 +13,22 @@ import CheckList from "@editorjs/checklist";
 import Delimiter from "@editorjs/delimiter";
 import InlineCode from "@editorjs/inline-code";
 import SimpleImage from "@editorjs/simple-image";
-import axios from "axios";
 
-const uploadImage = async (file: any) => {
-  const formData = new FormData();
-  formData.append("image", file);
-
-  try {
-    const res = await axios
-      .post("http://localhost:8000/upload-image/4db1682f-3293-4553-aa42-4a373a44c3c3", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => res.data);
-
-    return { url: res.data.url };
-  } catch (error) {
-    console.error("Error uploading image:", error);
-    return null; // Handle upload errors gracefully
-  }
-};
 
 
 export const EDITOR_JS_TOOLS = {
-  embed: Embed,
-  table: Table,
-  marker: Marker,
-  list: List,
-  warning: Warning,
-  code: Code,
-  linkTool: LinkTool,
-  image: {
-    class: Image,
-    config: {
-      uploader: uploadImage,
-    },
-    caption: "",
-    withBorder: true,
-    stretched: false,
-    withBackground: false,
-  },
-  raw: Raw,
+  // embed: Embed,
+  // table: Table,
+  // marker: Marker,
   header: Header,
-  quote: Quote,
-  checklist: CheckList,
-  delimiter: Delimiter,
-  inlineCode: InlineCode,
-  simpleImage: SimpleImage,
+  list: List,
+  // warning: Warning,
+  // code: Code,
+  linkTool: LinkTool,
+  // raw: Raw,
+  // quote: Quote,
+  // checklist: CheckList,
+  // delimiter: Delimiter,
+  // inlineCode: InlineCode,
+  // simpleImage: SimpleImage,
 };

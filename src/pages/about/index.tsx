@@ -104,7 +104,6 @@ const About = () => {
       .finally(() => setGetTeamLoading(false));
   }, [dataChanged]);
 
-  console.log(getTeam?.map((item) => item.partners?.map((el) => el.name)));
 
   React.useEffect(() => {
     setPending(true);
