@@ -19,6 +19,23 @@ import {
 } from "types";
 import baseApiService from "service/base";
 
+interface IEditorData {
+  time: number;
+  blocks: Array<any>;
+  version: string;
+}
+
+interface INewsCreateData {
+  ru: {
+    title: string;
+    editor: IEditorData;
+  };
+  en: {
+    title: string;
+    editor: IEditorData;
+  };
+}
+
 const initialFormState = {
   ru: {
     vacancyTitle: "",
@@ -46,42 +63,54 @@ const Vacancy = () => {
   const [form, setForm] = useState(initialFormState);
   const [pending, setPending] = useState(false);
   const [dataChanged, setDataChanged] = useState(false);
-  const [editorText, setEditorText] = useState(initialFormStateEditor);
-  const [editorTitle, setEditorTitle] = useState(initialTitleState);
+  const [editorTitle, setEditorTitle] = useState<{
+    ru: { title: string };
+    en: { title: string };
+  }>({ ru: { title: "" }, en: { title: "" } });
+  const [editorText, setEditorText] = useState<{
+    ru: { editor: IEditorData };
+    en: { editor: IEditorData };
+  }>({
+    ru: { editor: { time: 0, blocks: [], version: "" } },
+    en: { editor: { time: 0, blocks: [], version: "" } },
+  });
   const [newsItem, setNewsItem] = useState<TVacancyItemCreateData[] | null>([]);
   const [fileNews, setFileNews] = useState<File | null>(null);
   const instanceRef = React.useRef<any>(null);
   const ReactEditorJS = createReactEditorJS();
 
-  async function handleSave() {
+  const handleSave = async () => {
     if (instanceRef.current) {
       const savedData = await instanceRef.current.save();
-      setEditorText(savedData);
-      sendDataToBackend(savedData);
-    }
-  }
-  const sendDataToBackend = async (data: TNewsItemData) => {
-    try {
-      await baseApiService
-        .POST("vacancy-item/create", {
-          ru: {
-            title: editorTitle.ru.title,
-            editor: editorText,
-          },
-          en: {
-            title: editorTitle.en.title,
-            editor: editorText,
-          },
-        })
-        .then((res) => res.data)
-        .finally(() => {
-          setDataChanged(!dataChanged);
-        });
-    } catch (error: any) {
-      toast.error(error.message);
+      setEditorText({
+        ru: { editor: savedData },
+        en: { editor: savedData },
+      });
+      await sendDataToBackend(savedData);
     }
   };
 
+  const sendDataToBackend = async (data: IEditorData) => {
+    try {
+      await axios.post("http://localhost:8000/vacancy-item/createk", {
+        ru: {
+          title: editorTitle.ru.title,
+          editor: data,
+        },
+        en: {
+          title: editorTitle.en.title,
+          editor: data,
+        },
+      });
+      setDataChanged(!dataChanged);
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        toast.error("Fill all the fields!");
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+    }
+  };
   React.useEffect(() => {
     vacancyApiService
       .getVacancy()

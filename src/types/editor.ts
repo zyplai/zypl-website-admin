@@ -26,6 +26,10 @@ export interface INewsItemCreateData {
   en: TNewsItemData;
   ru: TNewsItemData;
 }
+export interface INewsCreateData {
+  en: TNewsItemData;
+  ru: TNewsItemData;
+}
 export interface TVacancyItemCreateData {
   id: string
   icon?: string;

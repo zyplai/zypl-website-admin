@@ -17,6 +17,23 @@ import Icon from "icons";
 import EditNews from "components/edit-news";
 import ModalCenter from "components/modal-center";
 
+interface IEditorData {
+  time: number;
+  blocks: Array<any>;
+  version: string;
+}
+
+interface INewsCreateData {
+  ru: {
+    title: string;
+    editor: IEditorData;
+  };
+  en: {
+    title: string;
+    editor: IEditorData;
+  };
+}
+
 const initialFormState = {
   ru: {
     newsTitle: "",
@@ -27,58 +44,84 @@ const initialFormState = {
     newsDesc: "",
   },
 };
-const initialTitleState = {
-  en: {
-    title: "",
-  },
-  ru: {
-    title: "",
-  },
-};
-
-const initialFormStateEditor = {
-  editor: {},
-};
 
 const News = () => {
   const [form, setForm] = useState(initialFormState);
   const [pending, setPending] = useState(false);
   const [dataChanged, setDataChanged] = useState(false);
-  const [editorText, setEditorText] = useState(initialFormStateEditor);
-  const [editorTitle, setEditorTitle] = useState(initialTitleState);
+  const [editorTitle, setEditorTitle] = useState<{
+    ru: { title: string };
+    en: { title: string };
+  }>({ ru: { title: "" }, en: { title: "" } });
+  const [editorText, setEditorText] = useState<{
+    ru: { editor: IEditorData };
+    en: { editor: IEditorData };
+  }>({
+    ru: { editor: { time: 0, blocks: [], version: "" } },
+    en: { editor: { time: 0, blocks: [], version: "" } },
+  });
   const [newsItem, setNewsItem] = useState<INewsItemCreateData[] | null>([]);
   const [fileNews, setFileNews] = useState<File | null>(null);
   const [modalNews, setModalNews] = useState(false);
 
   const instanceRef = React.useRef<any>(null);
+  const instanceRuRef = React.useRef<any>(null);
   const ReactEditorJS = createReactEditorJS();
+  // const EditorJS = createReactEditorJS();
 
-  async function handleSave() {
+  const handleSave = async () => {
     if (instanceRef.current) {
       const savedData = await instanceRef.current.save();
-      setEditorText(savedData);
-      sendDataToBackend(savedData);
+      // const savedDataRu = await instanceRuRef.current.save();
+      setEditorText({
+        ru: { editor: savedData },
+        en: { editor: savedData },
+      });
+      await sendDataToBackend(savedData);
     }
-  }
-  const sendDataToBackend = async (data: TNewsItemData) => {
+  };
+  // const handleSave = async () => {
+  //   if (instanceRef.current && instanceRuRef.current) {
+  //     try {
+  //       const savedData = await instanceRef.current.save();
+  //       const savedDataRu = await instanceRuRef.current.save();
+
+  //       setEditorText({
+  //         ru: { editor: savedDataRu },
+  //         en: { editor: savedData },
+  //       });
+
+  //       await sendDataToBackend({
+  //         ru: savedDataRu,
+  //         en: savedData,
+  //       });
+  //     } catch (error) {
+  //       console.error('Error saving data:', error);
+  //     }
+  //   } else {
+  //     console.warn('One of the editor instances is null or undefined');
+  //   }
+  // };
+
+  const sendDataToBackend = async (data: IEditorData) => {
     try {
-      const res = await axios
-        .post("http://localhost:8000/news-item/create", {
-          ru: {
-            title: editorTitle.ru.title,
-            editor: editorText,
-          },
-          en: {
-            title: editorTitle.en.title,
-            editor: editorText,
-          },
-        })
-        .then((res) => res.data)
-        .finally(() => {
-          setDataChanged(!dataChanged);
-        });
+      await axios.post("http://localhost:8000/news-item/create", {
+        ru: {
+          title: editorTitle.ru.title,
+          editor: data,
+        },
+        en: {
+          title: editorTitle.en.title,
+          editor: data,
+        },
+      });
+      setDataChanged(!dataChanged);
     } catch (error: any) {
-      toast.error(error.message);
+      if (error.response && error.response.status === 400) {
+        toast.error("Fill all the fields!");
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
     }
   };
 
@@ -117,7 +160,7 @@ const News = () => {
             main: {
               title: form.ru.newsTitle,
               description: form.ru.newsDesc,
-            }
+            },
           },
           en: {
             main: {
@@ -247,8 +290,13 @@ const News = () => {
                 instanceRef.current = instance;
               }}
               tools={EDITOR_JS_TOOLS}
-              defaultValue={""}
             />
+            {/* <EditorJS
+              onInitialize={(instance: any) => {
+                instanceRuRef.current = instance;
+              }}
+              tools={EDITOR_JS_TOOLS}
+            /> */}
             <Button className="submitButton" onClick={handleSave}>
               Save!
             </Button>
@@ -257,12 +305,7 @@ const News = () => {
         <div className="home">
           <div className="content contentNews">
             {newsItem?.map((el) => (
-              <div
-                className="boxarea"
-                style={{ width: "300px" }}
-                key={el.id}
-                // onClick={() => setModalNews(true)}
-              >
+              <div className="boxarea" style={{ width: "300px" }} key={el.id}>
                 <img
                   src={
                     el.titleImage ??
@@ -287,7 +330,12 @@ const News = () => {
                   Save
                 </Button>
                 <h2>{el.en.title}</h2>
-                {/* <div>{el.en.editor?.blocks?.map((el) => el.data.text)}</div> */}
+                {/* <button
+                  className="add_button"
+                  onClick={() => setModalNews(true)}
+                >
+                  <Icon name="pencil" size={18} />
+                </button> */}
                 <Button
                   onClick={() => handleDeletePartner(el.id)}
                   className="delete"
@@ -296,7 +344,11 @@ const News = () => {
                   Delete
                 </Button>
                 {/* <ModalCenter in={modalNews} onClose={() => setModalNews(false)}>
-                  <EditNews list={el.en.editor?.blocks?.map((el) => ({text: el.data.text}))} />
+                  <EditNews
+                    list={el.en.editor?.blocks?.map((el) => ({
+                      text: el.data.text,
+                    }))}
+                  />
                 </ModalCenter> */}
               </div>
             ))}
